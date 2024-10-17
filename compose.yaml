@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  wordle_db:
+    image: postgres:16.0
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=wordle_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - pg_wordle:/var/lib/postgresql/data
+    networks:
+      - wordle-network
+
+  wordle_app:
+    restart: always
+    build: ./backend
+    ports:
+      - "80:8080"
+    depends_on:
+      - wordle_db
+    links:
+      - wordle_db
+    environment:
+      JWT_SECRET: 'b5f59337a612a2a7dc07328f3e7d1a04722967c7f06df20a499a7d3f91ff2a7e'
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_VK_CLIENTID: 'xyz'
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_VK_CLIENTSECRET: 'xyz'
+      SPRING_R2DBC_URL: 'r2dbc:postgresql://wordle_db/wordle_db'
+      SPRING_R2DBC_USERNAME: 'postgres'
+      SPRING_R2DBC_PASSWORD: 'postgres'
+      SPRING_FLYWAY_URL: 'jdbc:postgresql://wordle_db:5432/wordle_db'
+    networks:
+      - wordle-network
+
+networks:
+  wordle-network:
+    driver: bridge
+
+volumes:
+  pg_wordle:
