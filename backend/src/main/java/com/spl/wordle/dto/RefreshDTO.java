@@ -10,6 +10,5 @@ import lombok.*;
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RefreshDTO {
-    @NonNull
     private String refreshToken;
 }

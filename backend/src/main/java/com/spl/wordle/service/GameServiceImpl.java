@@ -22,11 +22,13 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class GameServiceImpl implements GameService {
+    private final static Integer MAXIMUM_TRIES = 6;
     private final GameRepository gameRepository;
     private final UserService userService;
     private final UserMapper userMapper;
@@ -55,7 +57,7 @@ public class GameServiceImpl implements GameService {
         return userService.getAuthenticatedUser(authentication)
                 .flatMap(user -> saveGameWithUserId(newGame, user.getId()))
                 .switchIfEmpty(gameRepository.save(newGame)) // Save game without userId if no user found
-                .map(this::mapToGuessResponseDTO);
+                .map(game -> buildResponse(null, game, List.of()));
     }
 
     @Override
@@ -73,11 +75,17 @@ public class GameServiceImpl implements GameService {
     private List<String> loadWordsFromFile() {
         try (InputStream inputStream = new ClassPathResource("words.json").getInputStream()) {
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(inputStream, objectMapper.getTypeFactory().constructCollectionType(List.class, String.class));
+            List<String> words = objectMapper.readValue(inputStream,
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, String.class));
+
+            return words.stream()
+                    .map(String::toUpperCase)
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             throw new RuntimeException("Failed to load words from file", e);
         }
     }
+
 
     private String getRandomWord() {
         return words.get(random.nextInt(words.size()));
@@ -94,16 +102,6 @@ public class GameServiceImpl implements GameService {
     private Mono<Game> saveGameWithUserId(Game game, Long userId) {
         game.setUserId(userId);
         return gameRepository.save(game);
-    }
-
-    private GuessResponseDTO mapToGuessResponseDTO(Game game) {
-        return GuessResponseDTO.builder()
-                .gameId(game.getId())
-                .guessedWord(game.getWord())
-                .currentTry(game.getCurrentTry())
-                .gameStatus(game.getGameStatus())
-                .letterStatuses(List.of())
-                .build();
     }
 
     private Mono<GuessResponseDTO> processGuess(String guessedWord, Game game, Authentication authentication) {
@@ -129,13 +127,13 @@ public class GameServiceImpl implements GameService {
     }
 
     private void validateGuessedWord(String guessedWord) {
-        if (!words.contains(guessedWord) || guessedWord.length() != 6) {
+        if (!words.contains(guessedWord)) {
             throw new ApiException("This word is incorrect", "INVALID_WORD");
         }
     }
 
     private void updateCurrentTry(Game game) {
-        if (game.getCurrentTry() >= 6) {
+        if (game.getCurrentTry() >= MAXIMUM_TRIES) {
             throw new ApiException("Current try exceeds maximum allowed attempts.", "MAXIMUM_ATTEMPTS");
         }
         game.setCurrentTry(game.getCurrentTry() + 1);
@@ -188,6 +186,7 @@ public class GameServiceImpl implements GameService {
 
     private GuessResponseDTO buildResponse(String guessedWord, Game game, List<LetterStatus> letterStatuses) {
         return GuessResponseDTO.builder()
+                .gameId(game.getId())
                 .guessedWord(guessedWord)
                 .currentTry(game.getCurrentTry())
                 .gameStatus(game.getGameStatus())

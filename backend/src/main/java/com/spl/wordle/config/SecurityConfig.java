@@ -54,12 +54,11 @@ public class SecurityConfig {
             "/api/games/**",
             "api/games"
     };
-    @Bean
-    PasswordEncoder passwordEncoder()
-    {
-        return (PasswordEncoder) new BCryptPasswordEncoder();
-    }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public ReactiveOAuth2AuthorizedClientManager authorizedClientManager(
@@ -74,14 +73,15 @@ public class SecurityConfig {
                         .build();
 
         DefaultReactiveOAuth2AuthorizedClientManager authorizedClientManager =
-                new DefaultReactiveOAuth2AuthorizedClientManager(clientRegistrationRepository, authorizedClientRepository);
+                new DefaultReactiveOAuth2AuthorizedClientManager(
+                        clientRegistrationRepository,
+                        authorizedClientRepository);
         authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
         return authorizedClientManager;
     }
 
-
     @Bean
-    WebClient webClient(ReactiveOAuth2AuthorizedClientManager authorizedClientManager) {
+    public WebClient webClient(ReactiveOAuth2AuthorizedClientManager authorizedClientManager) {
         ServerOAuth2AuthorizedClientExchangeFilterFunction oauth2Client =
                 new ServerOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
         return WebClient.builder()
@@ -90,15 +90,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http, AuthenticationManager authenticationManager) {
-        return http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+    public SecurityWebFilterChain securityWebFilterChain(
+            ServerHttpSecurity http,
+            AuthenticationManager authenticationManager) {
+        return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(authorize -> authorize
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
                         .pathMatchers(publicRoutes).permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/users").permitAll()
                         .anyExchange().authenticated())
-
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint((swe, e) -> {
                             log.error("Unauthorized error: {}", e.getMessage());
@@ -107,8 +107,7 @@ public class SecurityConfig {
                         .accessDeniedHandler((swe, e) -> {
                             log.error("Access denied: {}", e.getMessage());
                             return Mono.fromRunnable(() -> swe.getResponse().setStatusCode(HttpStatus.FORBIDDEN));
-                        })
-                )
+                        }))
                 .addFilterAt(bearerAuthenticationFilter(authenticationManager), SecurityWebFiltersOrder.AUTHENTICATION)
                 .oauth2Login(withDefaults())
                 .build();
@@ -116,8 +115,10 @@ public class SecurityConfig {
 
     private AuthenticationWebFilter bearerAuthenticationFilter(AuthenticationManager authenticationManager) {
         AuthenticationWebFilter bearerAuthenticationFilter = new AuthenticationWebFilter(authenticationManager);
-        bearerAuthenticationFilter.setServerAuthenticationConverter(new BearerTokenServerAuthenticationConverter(new JwtHandler(secret)));
-        bearerAuthenticationFilter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers("/**"));
+        bearerAuthenticationFilter
+                .setServerAuthenticationConverter(new BearerTokenServerAuthenticationConverter(new JwtHandler(secret)));
+        bearerAuthenticationFilter
+                .setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers("/**"));
         return bearerAuthenticationFilter;
     }
 }

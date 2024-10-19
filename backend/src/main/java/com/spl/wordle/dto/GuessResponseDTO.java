@@ -1,5 +1,6 @@
 package com.spl.wordle.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.spl.wordle.enums.GameStatus;
 import com.spl.wordle.enums.LetterStatus;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -16,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GuessResponseDTO {
     private Long gameId;
     private String guessedWord;

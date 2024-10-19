@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(newUser)
                 .doOnSuccess(u -> log.info("IN create - user: {} created", u))
                 .map(userMapper::responseMap)
-                .doOnError(throwable -> log.error("Error creating user: {}", throwable.getMessage())) // Handle the error
+                .doOnError(throwable -> log.error("Error creating user: {}", throwable.getMessage()))
                 .onErrorMap(e -> new ApiException("Username already exists", "INVALID_USERNAME"));
     }
 

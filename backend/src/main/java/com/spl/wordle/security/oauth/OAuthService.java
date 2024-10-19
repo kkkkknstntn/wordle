@@ -1,5 +1,8 @@
 package com.spl.wordle.security.oauth;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spl.wordle.dto.AuthResponseDTO;
 import com.spl.wordle.dto.UserRequestDTO;
 import com.spl.wordle.entity.User;
@@ -8,9 +11,6 @@ import com.spl.wordle.repository.UserRepository;
 import com.spl.wordle.security.SecurityService;
 import com.spl.wordle.security.TokenDetails;
 import com.spl.wordle.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -66,10 +66,11 @@ public class OAuthService {
                         return userRepository.findByVkId(vkId)
                                 .flatMap(this::authenticate)
                                 .switchIfEmpty(userService.createVk(UserRequestDTO.builder()
-                                        .firstName(firstName)
-                                        .lastName(lastName)
-                                        .username(domain)
-                                        .build(), vkId).flatMap(createdUser -> authenticate(userMapper.responseMap(createdUser))))
+                                                .firstName(firstName)
+                                                .lastName(lastName)
+                                                .username(domain)
+                                                .build(), vkId)
+                                        .flatMap(createdUser -> authenticate(userMapper.responseMap(createdUser))))
                                 .flatMap(tokenDetails -> Mono.just(securityService.buildAuthResponse(tokenDetails)));
                     });
                 });

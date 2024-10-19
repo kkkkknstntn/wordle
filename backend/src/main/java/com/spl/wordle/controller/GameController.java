@@ -40,7 +40,8 @@ public class GameController {
         return gameService.createGame(authentication);
     }
 
-    @Operation(summary = "Обновить угадывание пользователя", description = "Обновить угадывание пользователя для текущей игры.")
+    @Operation(summary = "Обновить угадывание пользователя",
+            description = "Обновить угадывание пользователя для текущей игры.")
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<GuessResponseDTO> updateUser(@RequestBody GuessRequestDTO guessDTO, Authentication authentication) {
