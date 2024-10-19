@@ -1,0 +1,25 @@
+name: Check Line Lengths Workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-line-lengths:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt || echo "No requirements.txt found"
+
+      - name: Run line length check
+        run: python check_line_lengths.py

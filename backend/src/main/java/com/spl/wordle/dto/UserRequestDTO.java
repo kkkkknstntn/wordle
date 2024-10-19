@@ -13,6 +13,4 @@ public class UserRequestDTO {
     private String password;
     private String firstName;
     private String lastName;
-    private Integer wins;
-    private Integer loses;
 }
