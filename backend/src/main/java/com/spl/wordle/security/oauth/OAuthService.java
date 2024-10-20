@@ -13,6 +13,7 @@ import com.spl.wordle.security.TokenDetails;
 import com.spl.wordle.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -42,7 +43,7 @@ public class OAuthService {
                 .build());
     }
 
-    public Mono<AuthResponseDTO> authenticate(String code) {
+    public Mono<AuthResponseDTO> authenticate(String code, ServerHttpResponse response) {
         return webClient
                 .get()
                 .uri("https://oauth.vk.com/access_token?client_id=" + clientId +
@@ -51,9 +52,9 @@ public class OAuthService {
                         "&code=" + code)
                 .retrieve()
                 .bodyToMono(String.class)
-                .flatMap(response -> {
-                    String accessToken = extractAccessTokenVk(response);
-                    String userId = extractUserIdVk(response);
+                .flatMap(vkResponse -> {
+                    String accessToken = extractAccessTokenVk(vkResponse);
+                    String userId = extractUserIdVk(vkResponse);
                     Long vkId = Long.parseLong(userId);
 
                     return getUserInfoVk(accessToken, userId).flatMap(userInfoResponse -> {
@@ -71,7 +72,10 @@ public class OAuthService {
                                                 .username(domain)
                                                 .build(), vkId)
                                         .flatMap(createdUser -> authenticate(userMapper.responseMap(createdUser))))
-                                .flatMap(tokenDetails -> Mono.just(securityService.buildAuthResponse(tokenDetails)));
+                                .flatMap(tokenDetails -> {
+                                    securityService.setTokens(response, tokenDetails);
+                                    return Mono.just(securityService.buildAuthResponse(tokenDetails));
+                                });
                     });
                 });
     }

@@ -15,10 +15,14 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 @Component
@@ -107,9 +111,19 @@ public class SecurityService {
                 .build();
     }
 
-    public Mono<AuthResponseDTO> login(AuthRequestDTO dto) {
+    public Mono<AuthResponseDTO> login(AuthRequestDTO dto, ServerHttpResponse response) {
         return authenticate(dto.getUsername(), dto.getPassword())
-                .flatMap(tokenDetails -> Mono.just(buildAuthResponse(tokenDetails)));
+                .flatMap(tokenDetails -> {
+                    setTokens(response, tokenDetails);
+                    return Mono.just(buildAuthResponse(tokenDetails));
+                });
+    }
+
+    public void setTokens(ServerHttpResponse response, TokenDetails tokenDetails){
+        createCookie(response, "access_token", tokenDetails.getAccessToken(),
+                tokenDetails.getAccessExpiresAt().toInstant());
+        createCookie(response, "refresh_token", tokenDetails.getRefreshToken(),
+                tokenDetails.getRefreshExpiresAt().toInstant());
     }
 
     public Mono<TokenDetails> authenticate(String username, String password) {
@@ -132,7 +146,7 @@ public class SecurityService {
                 .switchIfEmpty(Mono.error(new AuthException("Invalid username", "INVALID_USERNAME")));
     }
 
-    public Mono<AuthResponseDTO> refresh(RefreshDTO refreshDTO) {
+    public Mono<AuthResponseDTO> refresh(RefreshDTO refreshDTO, ServerHttpResponse response) {
         String refreshToken = refreshDTO.getRefreshToken();
         Claims claims = jwtHandler.getClaimsFromToken(refreshToken, TokenType.REFRESH);
 
@@ -141,9 +155,21 @@ public class SecurityService {
         return userService.getByUsername(username)
                 .flatMap(dto -> {
                     User user = userMapper.responseMap(dto);
+                    TokenDetails tokenDetails = generateToken(user).toBuilder().userId(user.getId()).build();
+                    setTokens(response, tokenDetails);
                     return Mono.just(buildAuthResponse(generateToken(user).toBuilder()
                             .userId(user.getId())
                             .build()));
                 });
+    }
+
+    private void createCookie(ServerHttpResponse response, String name, String value, Instant expiresAt) {
+        ResponseCookie cookie = ResponseCookie.from(name, value)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(Duration.between(Instant.now(), expiresAt))
+                .build();
+        response.addCookie(cookie);
     }
 }
