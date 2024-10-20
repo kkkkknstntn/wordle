@@ -1,0 +1,212 @@
+@font-face {
+  font-family: 'InriaSans-Regular';
+  src: url('../fonts/InriaSans-Regular.ttf') format('truetype');
+}
+
+body {
+  /* margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; */
+  padding: 0;
+  margin: 0;
+  font-family: 'InriaSans-Regular', sans-serif;
+}
+
+.App {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.bgImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("https://i.pinimg.com/originals/e5/1f/11/e51f1129942731befe91517ec276ed3e.png") center center/cover no-repeat;
+  z-index: -1;
+} 
+
+.darken {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  /* filter: blur(5px); */
+  backdrop-filter: blur(7px);
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.mainContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 10px;
+}
+
+.topPlayersContainer {
+  vertical-align: top;
+  display: inline-block;
+  width: 300px;
+  background-color: #FFF;
+  margin: 2px;
+  border-radius: 10px;
+  padding: 45px 10px;
+  vertical-align: top;
+}
+
+.topPlayers {
+  margin: 25px 0;
+  list-style-type: none;
+}
+
+.topPlayersItem {
+  font-size: 20px;
+}
+
+.topPlayersText {
+  font-size: 32px;
+  text-align: center;
+}
+
+.mainPanel {
+  display: inline-block;
+  width: 350px;
+  background-color: #FFF;
+  margin: 2px;
+  border-radius: 10px;
+  padding: 20px 15px;
+  vertical-align: top;
+}
+
+.defaultBtn {
+  display: block;
+  appearance: none;
+  border: 0;
+  border-radius: 5px;
+  background: #4676D7;
+  color: #fff;
+  padding: 8px 16px;
+  font-size: 16px;
+}
+
+.defaultBtn:hover {
+  background: #1d49aa;
+  cursor: pointer;
+}
+
+.loginButton {
+  margin-top: 10px;
+  background: #d46700;
+}
+
+.loginButton:hover {
+  background: #ac5300;
+}
+
+.defaultBtn:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px #cbd6ee;
+}
+
+.playButton {
+  background: #009620;
+  margin-bottom: 5px;
+}
+
+.playButton:hover {
+  background: #006d18;
+}
+
+.authForm {
+  margin: 35px 0 6px 0;
+}
+
+.passwordContainer {
+  margin-top: 5px;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* .gameKeyboardWrapper {
+  width: 580px;
+  height: 200px;
+  position: relative;
+  background-color: #e1e1e1;
+  border-radius: 7px;
+} */
+
+.gameKeyboard {
+  display: grid;
+  grid-template-columns: repeat(10, 50px);
+  grid-template-rows: repeat(3, 50px);
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
+
+  /* position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+}
+
+.gameWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 50px;
+
+  background-color: #fbfbfb;
+  width: 550px;
+  margin: 0 auto;
+  padding: 10px 20px 40px 20px;
+  border-radius: 7px;
+}
+
+.backspaceButton {
+  width: 120px;
+}
+.panel {
+  align-items: center;
+  background-color: #e0edff;
+  border: 1px solid #002fb5;
+  border-radius: 5px;
+  color: var(--text);
+  flex: 1 1;
+  font-size: 28px;
+  font-weight: 700;
+  height: 54px;
+  margin: 3px;
+  min-width: 50px;
+  max-width: 54px;
+  text-transform: uppercase;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel-row {
+  display: flex;
+}
+
+.submitButton {
+  background-color: #4aa700;
+}
+
+.submitButton:hover {
+  background-color: #3e8a00;
+}
+

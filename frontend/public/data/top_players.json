@@ -1,0 +1,65 @@
+[
+    {
+      "id": 1,
+      "name": "еблан228",
+      "winRate": 65.45,
+      "wins": 150,
+      "losses": 80
+    },
+    {
+      "id": 2,
+      "name": "хуесос1337",
+      "winRate": 62.15,
+      "wins": 120,
+      "losses": 75
+    },
+    {
+      "id": 3,
+      "name": "долбоеб777",
+      "winRate": 58.25,
+      "wins": 100,
+      "losses": 72
+    },
+    {
+      "id": 4,
+      "name": "рамзес666",
+      "winRate": 60.50,
+      "wins": 110,
+      "losses": 71
+    },
+    {
+      "id": 5,
+      "name": "яторо",
+      "winRate": 61.90,
+      "wins": 115,
+      "losses": 70
+    },
+    {
+      "id": 6,
+      "name": "миракл",
+      "winRate": 59.75,
+      "wins": 105,
+      "losses": 70
+    },
+    {
+      "id": 7,
+      "name": "я",
+      "winRate": 63.25,
+      "wins": 125,
+      "losses": 72
+    },
+    {
+      "id": 8,
+      "name": "вовапейн",
+      "winRate": 57.80,
+      "wins": 95,
+      "losses": 70
+    },
+    {
+      "id": 9,
+      "name": "алюшев раиль рафикович",
+      "winRate": 60.30,
+      "wins": 108,
+      "losses": 71
+    }
+  ]
