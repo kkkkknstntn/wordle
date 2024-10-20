@@ -1,0 +1,31 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/wordle_db
+    username: postgres
+    password: postgres
+  flyway:
+    url: jdbc:postgresql://localhost:5432/wordle_db
+    user: postgres
+    password: postgres
+    baseline-on-migrate: true
+    baseline-version: 0
+  cloud:
+    gateway:
+      routes:
+        - id: game-route
+          uri: lb://game-service
+          predicates:
+            - Path=/game/**
+          filters:
+            - StripPrefix=1
+
+
+jwt:
+  secret: b5f59337a612a2a7dc07328f3e7d1a04722967c7f06df20a499a7d3f91ff2a7e
+  expiration: 600
+  issuer: wordle
+
+
+module-name: wordle
+api-version: 1.0.0
+
