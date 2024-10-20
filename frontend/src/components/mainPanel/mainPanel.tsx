@@ -1,10 +1,15 @@
 import React from 'react'
 import DefaultButton from '../defaultButton/defaultButton'
+import gameService from '../../service/gameService'
+import { Link, useNavigate } from 'react-router-dom'
+
 
 const MainPanel = () => {
-  const handlePlayWithoutAuth = () => {
+  const navigate = useNavigate()
+  const handlePlayWithoutAuth = async () => { 
     // Здесь можно добавить дополнительную логику, если необходимо
-    window.location.href = '/game'; // URL для игровой страницы без авторизации
+    navigate("/game"); // URL для игровой страницы без авторизации
+    await gameService.createGame().then(res => { console.log(res) }).catch(err => { console.warn(err) })
   }
   return (
     <div className="mainPanel">
@@ -28,7 +33,7 @@ const MainPanel = () => {
         <DefaultButton text="Играть без авторизации" extraClass="playButton" action={handlePlayWithoutAuth}/>
 
         <div> 
-          Нет аккаунта? <a href="/"> Зарегистрироваться! </a>
+          Нет аккаунта? <Link to="/"> Зарегистрироваться! </Link>
         </div>
      </div>
   )
