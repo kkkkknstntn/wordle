@@ -1,6 +1,5 @@
 package com.spl.wordle.controller;
 
-import com.spl.wordle.dto.RefreshDTO;
 import com.spl.wordle.security.oauth.OAuthService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,7 +8,6 @@ import com.spl.wordle.dto.AuthRequestDTO;
 import com.spl.wordle.dto.AuthResponseDTO;
 import com.spl.wordle.security.SecurityService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
@@ -36,9 +34,10 @@ public class AuthController {
             summary = "Обновление токена",
             description = "Обновить токен доступа с использованием refresh-токена.")
     @PostMapping("/refresh")
-    public Mono<AuthResponseDTO> refresh(@RequestBody RefreshDTO dto, ServerHttpResponse response) {
-        log.info(dto.getRefreshToken());
-        return securityService.refresh(dto, response);
+    public Mono<AuthResponseDTO> refresh(
+            @CookieValue("refresh_token") String refreshToken,
+            ServerHttpResponse response) {
+        return securityService.refresh(refreshToken, response);
     }
 
     @Operation(

@@ -2,7 +2,6 @@ package com.spl.wordle.security;
 
 import com.spl.wordle.dto.AuthRequestDTO;
 import com.spl.wordle.dto.AuthResponseDTO;
-import com.spl.wordle.dto.RefreshDTO;
 import com.spl.wordle.entity.User;
 import com.spl.wordle.enums.Provider;
 import com.spl.wordle.enums.TokenType;
@@ -20,7 +19,6 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
@@ -146,10 +144,8 @@ public class SecurityService {
                 .switchIfEmpty(Mono.error(new AuthException("Invalid username", "INVALID_USERNAME")));
     }
 
-    public Mono<AuthResponseDTO> refresh(RefreshDTO refreshDTO, ServerHttpResponse response) {
-        String refreshToken = refreshDTO.getRefreshToken();
+    public Mono<AuthResponseDTO> refresh(String refreshToken, ServerHttpResponse response) {
         Claims claims = jwtHandler.getClaimsFromToken(refreshToken, TokenType.REFRESH);
-
         String username = claims.get("username", String.class);
 
         return userService.getByUsername(username)
