@@ -15,7 +15,6 @@ public class WebConfig implements WebFluxConfigurer {
                 .allowedOrigins("*") // Allow all origins (use specific domains in production)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow specified methods
                 .allowedHeaders("*") // Allow all headers
-                .allowCredentials(true) // Allow credentials
                 .maxAge(3600); // Cache pre-flight response for 1 hour
         }
 }
