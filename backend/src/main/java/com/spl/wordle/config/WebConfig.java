@@ -11,11 +11,10 @@ public class WebConfig implements WebFluxConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**") // Allow all paths
-                .allowedOrigins("*") // Allow all origins (use specific domains in production)
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow specified methods
-                .allowedHeaders("*") // Allow all headers
-                .allowCredentials(true) // Allow credentials
-                .maxAge(3600); // Cache pre-flight response for 1 hour
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .maxAge(3600);
         }
 }
