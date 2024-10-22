@@ -1,6 +1,6 @@
 import React from 'react'
-import TopPlayers from '../../components/topPlayers/topPlayers';
-import MainPanel from '../../components/mainPanel/mainPanel';
+import TopPlayers from '../components/home/TopPlayers';
+import MainPanel from '../components/home/MainPanel';
 
 const HomePage = () => {
   return (

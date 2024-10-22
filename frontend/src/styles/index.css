@@ -210,3 +210,12 @@ code {
   background-color: #3e8a00;
 }
 
+.register {
+  color: #0000ff;
+  text-decoration: underline; 
+  cursor: pointer 
+}
+
+.regContainer {
+  margin: 35px 0 6px 0;
+}

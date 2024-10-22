@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { GameState } from '../../types/gameState';
 import { Player } from '../../types/player';
-import DefaultButton from '../defaultButton/defaultButton';
-import PanelRow from '../panelRow/panelRow';
+import DefaultButton from '../defaultButton/DefaultButton';
+import PanelRow from './PanelRow';
 
 
 function GameBoard({ currentPlayer, setCurrentPlayer}: {
