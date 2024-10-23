@@ -3,25 +3,20 @@ import axios from 'axios';
 import instance from '../../api/axios.api';
 import gameService from '../../service/gameService';
 import DefaultButton from '../defaultButton/DefaultButton';
+import { createUser } from '../../features/user/userSlice';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { UserRegisterData } from '../../types/user';
+import { useCookie } from '../../hooks/useCookie';
 // import authService from '../../service/authService';
 
-type UserRegisterData = {
-    username: string;
-    password: string;
-    first_name: string;
-    last_name: string;
-    wins: number;
-    loses: number;
-}
-
 const UserSignUpForm = () => {
+    const dispatch = useAppDispatch()
+
     const [userData, setUserData] = useState<UserRegisterData>({
         username: '',
         password: '',
         first_name: '',
-        last_name: '',
-        wins: 0,
-        loses: 0
+        last_name: ''
     });
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,10 +29,11 @@ const UserSignUpForm = () => {
     
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // await authService.registerUser(userData).then(res => { console.log(res) }).catch(err => {console.warn(err)})
+        dispatch(createUser(userData))
+        
     };
 
-    
+    // await authService.registerUser(userData).then(res => { console.log(res) }).catch(err => {console.warn(err)})
 
     return (
         <div className='regContainer'>

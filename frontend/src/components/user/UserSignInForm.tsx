@@ -1,9 +1,17 @@
 import React, { useState } from 'react'
 // import authService from '../../service/authService';
-import { UserLoginData } from '../../types/userData';
 import DefaultButton from '../defaultButton/DefaultButton';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { loginUser } from '../../features/user/userSlice';
 
 const UserSignInForm = () => {
+    const dispatch = useAppDispatch()
+    
+    interface UserLoginData {
+        username: string;
+        password: string;
+    }
+
     const [userData, setUserData] = useState<UserLoginData>({
         username: '',
         password: ''
@@ -11,6 +19,7 @@ const UserSignInForm = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        dispatch(loginUser(userData))
         // await authService.loginUser(userData).then(res => { console.log("УРА" + res) }).catch(err => {console.warn(err)})
     };
 

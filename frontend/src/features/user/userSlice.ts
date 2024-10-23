@@ -1,11 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import instance from "../../api/axios.api";
+import { UserLogin, UserRegisterData } from "../../types/user";
 
-export const createUser = createAsyncThunk(
+export const createUser = createAsyncThunk<any, UserRegisterData>( //мб надо будет поменять any
     "users/createUser",
     async (payload, thunkAPI) => {
         try {
             const res = await instance.post('/api/users', payload);
+            console.log("Юзер создался")
             return res.data;
         } catch (err) {
             console.log(err);
@@ -14,8 +16,23 @@ export const createUser = createAsyncThunk(
     }
 )
 
+export const loginUser = createAsyncThunk<any, UserLogin>( //мб надо будет поменять any
+    "users/loginUser",
+    async (payload, thunkAPI) => {
+        try {
+            //const res = await instance.post('/api/users', payload);
+            const login = await instance.post('/api/auth/login', payload)
+            console.log("Вы вошли")
+            return login.data;
+        } catch (err) {
+            console.log(err);
+            return thunkAPI.rejectWithValue(err)
+        }
+    }
+)
+
 const userSlice = createSlice({
-    name: "",
+    name: "user",
     initialState: {
         currentUser: {},
         isLoading: false,
@@ -29,6 +46,9 @@ const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(createUser.fulfilled, (state, {payload}) => {
+            state.currentUser = payload;
+        });
+        builder.addCase(loginUser.fulfilled, (state, {payload}) => {
             state.currentUser = payload;
         });
     }
