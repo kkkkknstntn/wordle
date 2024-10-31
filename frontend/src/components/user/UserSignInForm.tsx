@@ -1,26 +1,42 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 // import authService from '../../service/authService';
 import DefaultButton from '../defaultButton/DefaultButton';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { loginUser } from '../../features/user/userSlice';
+import { loginUser, selectCurrentState } from '../../features/userSlice';
+import { PayloadAction } from '@reduxjs/toolkit';
+import { IUser, LoginResponse, UserLogin, UserRegisterData } from "../../types/user";
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const UserSignInForm = () => {
-    const dispatch = useAppDispatch()
-    
     interface UserLoginData {
         username: string;
         password: string;
     }
+
+    const dispatch = useAppDispatch()
+    const { isAuthenticated } = useSelector(selectCurrentState)
+    const navigate = useNavigate()
 
     const [userData, setUserData] = useState<UserLoginData>({
         username: '',
         password: ''
     });
 
+    const isMounted = useRef(false);
+    useEffect(() => { 
+        console.log(isAuthenticated)
+        if(isMounted.current)
+            navigate("/user")
+        else isMounted.current = true
+    }, [isAuthenticated])
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        dispatch(loginUser(userData))
-        // await authService.loginUser(userData).then(res => { console.log("УРА" + res) }).catch(err => {console.warn(err)})
+        console.log(userData)
+        await dispatch(loginUser(userData)) as { 
+            payload: LoginResponse
+        };
     };
 
     // Обработчик изменения для полей ввода

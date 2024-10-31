@@ -3,11 +3,13 @@ import Panel from './Panel';
 
 interface PanelRowProps {
   word: string,
-  isLocked: boolean
+  isLocked: boolean,
+  letter_statuses?: string[]
 }
 
-const PanelRow: React.FC<PanelRowProps> = ({ word, isLocked }) => {
+const PanelRow: React.FC<PanelRowProps> = ({ word, isLocked, letter_statuses }) => {
   const [panels, setPanels] = useState<string[]>(['', '', '', '', '']);
+  const [rowLetterStatuses, setRowLetterStatuses] = useState(letter_statuses || []);
 
   useEffect(() => {
     if (isLocked) return;
@@ -22,10 +24,18 @@ const PanelRow: React.FC<PanelRowProps> = ({ word, isLocked }) => {
     }  
   }, [word]);
 
+   // Создаем уникальную копию letter_statuses для каждого PanelRow
+   useEffect(() => {
+    if (!letter_statuses) return;
+    
+    const rowCopy = [...letter_statuses];
+    setRowLetterStatuses(rowCopy);
+  }, [letter_statuses]);
+
   return (
     <div className="panel-row">
       {panels.map((char, index) => (
-        <Panel key={index} letter={char} filled={char != ' '} state={"ЗДЕСЬ НАЗВАНИЕ КЛАССА"} />
+        <Panel key={index} letter={char} filled={char != ' '} state={rowLetterStatuses?.[index] || ""} />
       ))}
     </div>
   );

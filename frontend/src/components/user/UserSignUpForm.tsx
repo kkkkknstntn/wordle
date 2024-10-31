@@ -3,10 +3,9 @@ import axios from 'axios';
 import instance from '../../api/axios.api';
 import gameService from '../../service/gameService';
 import DefaultButton from '../defaultButton/DefaultButton';
-import { createUser } from '../../features/user/userSlice';
+import { createUser } from '../../features/userSlice';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { UserRegisterData } from '../../types/user';
-import { useCookie } from '../../hooks/useCookie';
 // import authService from '../../service/authService';
 
 const UserSignUpForm = () => {
@@ -29,8 +28,7 @@ const UserSignUpForm = () => {
     
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        dispatch(createUser(userData))
-        
+        dispatch(createUser(userData))  
     };
 
     // await authService.registerUser(userData).then(res => { console.log(res) }).catch(err => {console.warn(err)})

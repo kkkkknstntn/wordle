@@ -10,17 +10,17 @@ interface MainPanelInterface {
   showAuthForm : boolean
 }
 
-const MainPanel = () => {
+const UserPanel = () => {
   return (
     <div className="mainPanel">
         <h1> W O R D L E </h1>
         <h2 style={{fontSize: '16px'}}> У вас есть 6 попыток угадать слово из 5 букв. </h2>
           {
-            <AuthorizationForm/> 
+            <UserForm/>
           }
       
      </div>
   )
 }
 
-export default MainPanel
+export default UserPanel

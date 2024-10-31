@@ -26,3 +26,12 @@ export type UserLogin = {
     username: string,
     password: string
 }
+
+export type LoginResponse = {
+    user_id: number,
+    issued_at: string,
+    access_token: string,
+    access_expires_at: string,
+    refresh_token: string,
+    refresh_expires_at: string
+}

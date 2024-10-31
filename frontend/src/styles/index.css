@@ -219,3 +219,27 @@ code {
 .regContainer {
   margin: 35px 0 6px 0;
 }
+
+.userForm {
+  display: flex;
+  flex-direction: column;
+  height: 200px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.userState {
+  font-size: 18px;
+}
+
+.NOT_PRESENT {
+  background-color: #ff4646;
+}
+
+.CORRECT {
+  background-color: #46cf00;
+}
+
+.MISPLACED {
+  background-color: #ffa500;;
+}

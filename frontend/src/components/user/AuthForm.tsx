@@ -1,47 +1,61 @@
 import React, { useState } from 'react'
 import gameService from '../../service/gameService'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import DefaultButton from '../defaultButton/DefaultButton'
 import UserSignInForm from './UserSignInForm'
 import UserSignUpForm from './UserSignUpForm'
+import { IUser } from '../../types/user'
+import { createGameWithoutAuth } from '../../features/gameSlice'
+import { useAppDispatch } from '../../hooks/useAppDispatch'
 
 const AuthorizationForm = () => {
-    // const { showForm } = useSelector(({ user }) => user);
+  const [isLoginFormVisible, setIsLoginFormVisible] = useState(true)
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()  
 
-    const [isLoginFormVisible, setIsLoginFormVisible] = useState(true)
-    const navigate = useNavigate()
-    
-    const handlePlayWithoutAuth = async () => { 
-        // Здесь можно добавить дополнительную логику, если необходимо
-        navigate("/game"); // URL для игровой страницы без авторизации
-        await gameService.createGame().then(res => { console.log(res) }).catch(err => { console.warn(err) })
-    }
-    const handleRegister = () => {
-        setIsLoginFormVisible(!isLoginFormVisible)
-    }
+  const handlePlayWithoutAuth = async () => { 
+      navigate("/game");
+      //await gameService.createGame().then(res => { console.log(res) }).catch(err => { console.warn(err) })
+      await dispatch(createGameWithoutAuth())
+  }
+
+  const handleRegister = () => {
+      setIsLoginFormVisible(!isLoginFormVisible)
+  }
   return (
-    // showForm ? 
-      <div className='authForm'>
-            {isLoginFormVisible ? 
-              <UserSignInForm/>
-            :
-              <UserSignUpForm/>
-            }
-            <DefaultButton text="Играть без авторизации" extraClass="playButton" action={handlePlayWithoutAuth}/>
+    <div className='authForm'>
+          { isLoginFormVisible ? 
+            <UserSignInForm/>
+            
+          :
+            <UserSignUpForm/>
+          }
+          <DefaultButton text="Играть без авторизации" extraClass="playButton" action={handlePlayWithoutAuth}/>
 
-            <div> 
-              Нет аккаунта?  
-              <span 
-                    onClick={handleRegister} 
-                    className='register' 
-              >
-                Зарегистрироваться
-              </span>
+          {isLoginFormVisible ? 
+          <div> 
+            Нет аккаунта? {" "}
+            <span 
+                  onClick={handleRegister} 
+                  className='register' 
+            >
+              Зарегистрироваться
+            </span>
           </div>
-      </div>
-      // :
-      // <></>
+          : 
+          <div>
+            Уже есть аккаунт? {" "}
+            <span 
+                  onClick={handleRegister} 
+                  className='register' 
+            >
+              Войти
+            </span>
+          </div>
+        }
+          
+    </div>
   )
 }
 
