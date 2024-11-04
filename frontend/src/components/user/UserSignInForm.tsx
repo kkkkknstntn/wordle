@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 // import authService from '../../service/authService';
 import DefaultButton from '../defaultButton/DefaultButton';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { loginUser, selectCurrentState } from '../../features/userSlice';
+import { loginUser, selectCurrentUserState } from '../../features/userSlice';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { IUser, LoginResponse, UserLogin, UserRegisterData } from "../../types/user";
 import { useSelector } from 'react-redux';
@@ -15,7 +15,7 @@ const UserSignInForm = () => {
     }
 
     const dispatch = useAppDispatch()
-    const { isAuthenticated } = useSelector(selectCurrentState)
+    const { isAuthenticated } = useSelector(selectCurrentUserState)
     const navigate = useNavigate()
 
     const [userData, setUserData] = useState<UserLoginData>({

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Player } from '../../types/player';
 import DefaultButton from '../defaultButton/DefaultButton';
 import PanelRow from './PanelRow';
@@ -6,19 +6,19 @@ import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { selectCurrentGameState, tryAgain } from '../../features/gameSlice';
 import { NewAttempt } from '../../types/game';
 import { useSelector } from 'react-redux';
+import GameKeyboard from './Keyboard';
+import GameStatusModel from './GameStatusModel';
 
 
-function GameBoard({ currentPlayer, setCurrentPlayer}: {
-    currentPlayer: Player | null;
-    setCurrentPlayer: React.Dispatch<React.SetStateAction<Player | null>>;
-  }): React.ReactElement {
+function GameBoard() {
   const [word, setWord] = useState('');
   const [currentAttempt, setCurrentAttempt] = useState(0)
   const [isEblan, setIsEblan] = useState(false)
   const dispatch = useAppDispatch()
 
-  const { game_id, current_try, game_status, letter_statuses } = useSelector(selectCurrentGameState)
+  const { game_id, guessed_word, current_try, game_status, letter_statuses } = useSelector(selectCurrentGameState)
   const [copyLetter_statuses, setCopyLetter_statuses] = useState(letter_statuses)
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -38,8 +38,7 @@ function GameBoard({ currentPlayer, setCurrentPlayer}: {
   useEffect(() => {
     setCopyLetter_statuses(letter_statuses)
     setCurrentAttempt(current_try)
-    
-    //setCopyLetter_statuses([])
+
   }, [current_try])
 
   // Функция обработки нажатия буквы
@@ -58,37 +57,23 @@ function GameBoard({ currentPlayer, setCurrentPlayer}: {
     if(word.length !== 5)
       setIsEblan(true);
     else {
-      //setIsEblan(false)
-
-      //setCurrentAttempt(current_try)
-      //setWord('')
-
       console.log(game_id)
       console.log(current_try + " " + game_status + " " + letter_statuses)
       console.log(word)
-
       await dispatch(tryAgain({
         game_id: game_id,
         guessed_word: word
       }))
       setIsEblan(false)
       setWord('')
-
     }
   }
-  
-  const englishLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  
   return (
     <div className='gameWrapper'>
+      {game_status == "WIN" || game_status == "LOSE" ? <GameStatusModel/> : <></>}
+
       <div className='viewBoard'>
         {currentAttempt}
-        {/* <PanelRow word={word} isLocked={currentAttempt != 0} letter_statuses={letter_statuses}/>
-        <PanelRow word={word} isLocked={currentAttempt != 1} letter_statuses={letter_statuses}/>
-        <PanelRow word={word} isLocked={currentAttempt != 2} letter_statuses={letter_statuses}/>
-        <PanelRow word={word} isLocked={currentAttempt != 3} letter_statuses={letter_statuses}/>
-        <PanelRow word={word} isLocked={currentAttempt != 4} letter_statuses={letter_statuses}/>
-        <PanelRow word={word} isLocked={currentAttempt != 5} letter_statuses={letter_statuses}/> */}
         {Array.from({ length: 6 }, (_, index) => (
           <PanelRow 
             key={index} 
@@ -106,22 +91,13 @@ function GameBoard({ currentPlayer, setCurrentPlayer}: {
       />
 
       {isEblan ? <> введи 5 букв еблан</> : <></>}
-      <div className='gameKeyboardWrapper'>
-        <div className='gameKeyboard'>
-          {Array.from(englishLetters).map(letter => 
-            <DefaultButton 
-              text={letter} 
-              action={() => handleLetterClick(letter)} 
-              extraClass='gameButton'
-            />
-          )}
-          <DefaultButton 
-              text={'Backspace'} 
-              action={() => handleLetterClick('Backspace')} 
-              extraClass='gameButton backspaceButton'
-            />
-        </div>
-      </div>
+      <GameKeyboard 
+        onLetterClick={handleLetterClick} 
+        onBackspaceClick={() => handleLetterClick('Backspace')} 
+        letter_statuses={letter_statuses} 
+        word={guessed_word}
+        isFirstRender={isFirstRender.current}
+      />
     </div>
   );
 }

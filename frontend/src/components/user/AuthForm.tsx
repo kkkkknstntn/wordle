@@ -8,9 +8,10 @@ import UserSignUpForm from './UserSignUpForm'
 import { IUser } from '../../types/user'
 import { createGameWithoutAuth } from '../../features/gameSlice'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
+import { changeFormType, selectCurrentUserState } from '../../features/userSlice'
 
 const AuthorizationForm = () => {
-  const [isLoginFormVisible, setIsLoginFormVisible] = useState(true)
+  const { formType } = useSelector(selectCurrentUserState)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()  
 
@@ -21,19 +22,18 @@ const AuthorizationForm = () => {
   }
 
   const handleRegister = () => {
-      setIsLoginFormVisible(!isLoginFormVisible)
+      dispatch(changeFormType())
   }
   return (
     <div className='authForm'>
-          { isLoginFormVisible ? 
+          { formType == "signin" ? 
             <UserSignInForm/>
-            
           :
             <UserSignUpForm/>
           }
           <DefaultButton text="Играть без авторизации" extraClass="playButton" action={handlePlayWithoutAuth}/>
 
-          {isLoginFormVisible ? 
+          {formType == "signin" ? 
           <div> 
             Нет аккаунта? {" "}
             <span 

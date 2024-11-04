@@ -1,17 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCurrentUser, resetState, selectCurrentState } from '../../features/userSlice';
+import { getCurrentUser, resetState, selectCurrentUserState } from '../../features/userSlice';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import DefaultButton from '../defaultButton/DefaultButton';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import { createGameWithAuth } from '../../features/gameSlice';
 
 const UserForm = () => {
-    const { currentUser, showAuthorizationForm, isAuthenticated, formType, isLoading } = useSelector(selectCurrentState);
+    const { currentUser, showAuthorizationForm, isAuthenticated, formType, isLoading } = useSelector(selectCurrentUserState);
     const dispatch = useAppDispatch();
     const navigate = useNavigate()
-
-    const isMounted = useRef(false)
 
     useEffect(() => {
         const fetchCurrentUser = async () => {
@@ -39,6 +38,11 @@ const UserForm = () => {
         navigate("/")
     };
 
+    const handlePlayWithAuth = async () => {
+        dispatch(resetState())
+        await dispatch(createGameWithAuth())
+        navigate("/game")
+    }
     return (
         <div className='userForm'>
             <div className='userState'>
@@ -49,7 +53,7 @@ const UserForm = () => {
                 Количество поражений: {currentUser?.loses} <br />
                 Ваше место в топе: {currentUser?.position} <br />
             </div>
-            <DefaultButton text="Играть" extraClass="playButton" />
+            <DefaultButton text="Играть" extraClass="playButton" action={handlePlayWithAuth}/>
             <DefaultButton text="Выйти" extraClass="playButton" action={handleExit} />
         </div>
     );

@@ -70,7 +70,7 @@ export const getCurrentUser = createAsyncThunk<IUser>(
 const initialState: UserState = {
     currentUser: null,
     isLoading: false,
-    formType: "signup",
+    formType: "signin",
     isAuthenticated: false,
     accessToken: null,
     refreshToken: null,
@@ -81,11 +81,16 @@ const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        resetState: (state) => state = initialState
+        resetState: (state) => state = initialState,
+        changeFormType: (state) => {
+            state.formType = state.formType === "signin" ? "signup" : "signin";
+            console.log("СОСТОЯНИЕ СТАЛО " + state.formType)
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(createUser.fulfilled, (state, {payload}) => {
             state.currentUser = payload;
+            state.formType = "signin"
         });
         builder.addCase(loginUser.fulfilled, (state, {payload}) => {
             state.isLoading = false;
@@ -111,6 +116,7 @@ const userSlice = createSlice({
         });
     }
 })
-export const selectCurrentState = (state: { user: UserState }) => state.user;
+export const selectCurrentUserState = (state: { user: UserState }) => state.user;
 export const { resetState } = userSlice.actions;
+export const { changeFormType } = userSlice.actions;
 export default userSlice.reducer;

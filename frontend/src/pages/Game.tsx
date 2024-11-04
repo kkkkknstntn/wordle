@@ -11,10 +11,7 @@ const GamePage = () => {
       <div className="darken"/>
       
       <h1>Wordle Game</h1>
-      <GameBoard 
-        currentPlayer={currentPlayer} 
-        setCurrentPlayer={setCurrentPlayer}
-      />
+      <GameBoard/>
     </div>
   );
 }

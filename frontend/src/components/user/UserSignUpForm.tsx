@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios';
 import instance from '../../api/axios.api';
 import gameService from '../../service/gameService';
@@ -7,8 +7,12 @@ import { createUser } from '../../features/userSlice';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { UserRegisterData } from '../../types/user';
 // import authService from '../../service/authService';
+type UserSignUpFormProps = {
+    setIsLoginFormVisible: (visible: boolean) => void;
+    isLoginFormVisible: boolean
+  };
 
-const UserSignUpForm = () => {
+  const UserSignUpForm =  () => {
     const dispatch = useAppDispatch()
 
     const [userData, setUserData] = useState<UserRegisterData>({
@@ -17,7 +21,6 @@ const UserSignUpForm = () => {
         first_name: '',
         last_name: ''
     });
-
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.currentTarget;
         setUserData(prevData => ({
@@ -28,10 +31,8 @@ const UserSignUpForm = () => {
     
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        dispatch(createUser(userData))  
+        await dispatch(createUser(userData))
     };
-
-    // await authService.registerUser(userData).then(res => { console.log(res) }).catch(err => {console.warn(err)})
 
     return (
         <div className='regContainer'>
