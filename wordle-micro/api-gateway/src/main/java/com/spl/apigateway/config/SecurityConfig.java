@@ -83,24 +83,8 @@ public class SecurityConfig {
                             return Mono.fromRunnable(() -> swe.getResponse().setStatusCode(HttpStatus.FORBIDDEN));
                         }))
                 .addFilterAt(bearerAuthenticationFilter(authenticationManager), SecurityWebFiltersOrder.AUTHENTICATION)
-                .addFilterAt(new UserIdHeaderFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
 //                .oauth2Login(withDefaults())
                 .build();
-    }
-
-    private static class UserIdHeaderFilter implements WebFilter {
-        @Override
-        public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-            return chain.filter(exchange).then(Mono.defer(() -> {
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                if (authentication != null && authentication.isAuthenticated()) {
-                    String name =  ((CustomPrincipal) authentication.getPrincipal()).getName();
-                    log.info("USER_Name: {}", name);
-                    exchange.getResponse().getHeaders().add("X-User-Name", name);
-                }
-                return Mono.empty();
-            }));
-        }
     }
 
 

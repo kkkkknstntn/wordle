@@ -58,10 +58,23 @@ public interface UserRepository extends R2dbcRepository<User, Long> {
     Flux<User> findAllSortedByWins(@Param("size") int size, @Param("offset") int offset);
 
 
-    @Query("SELECT ROW_NUMBER() OVER (ORDER BY wins DESC) AS rank FROM users WHERE username = :username")
+    @Query("""
+            SELECT rank
+            FROM (
+                SELECT username,
+                       ROW_NUMBER() OVER (ORDER BY wins DESC) AS rank
+                FROM users
+            ) AS ranked_users
+            WHERE ranked_users.username = :username""")
     Mono<Integer> findUserRankByWins(@Param("username") String username);
 
-    @Query("SELECT ROW_NUMBER() OVER (ORDER BY (wins * 1.0 / CASE WHEN loses = 0 THEN 1 ELSE loses END) DESC) AS rank " +
-            "FROM users WHERE username = :username")
+    @Query("""
+        SELECT rank
+        FROM (
+            SELECT username,
+                   ROW_NUMBER() OVER (ORDER BY (wins * 1.0 / CASE WHEN loses = 0 THEN 1 ELSE loses END) DESC) AS rank
+            FROM users
+        ) AS ranked_users
+        WHERE ranked_users.username = :username""")
     Mono<Integer> findUserRankByWinLossRatio(@Param("username") String username);
 }

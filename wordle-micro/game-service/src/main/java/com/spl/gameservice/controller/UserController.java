@@ -66,7 +66,7 @@ public class UserController {
             value = "/getByWins",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<UserResponseDTO> findUserPositionByWins(
-            @RequestHeader(value = "X-User-ID", required = false) String username)
+            @RequestHeader(value = "X-User-Name", required = false) String username)
     {
         return userService.findUserPositionByWins(username);
     }
@@ -78,7 +78,7 @@ public class UserController {
             value = "/getByWinLossRatio",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<UserResponseDTO> geByWinLossRatio(
-            @RequestHeader(value = "X-User-ID", required = false) String username)
+            @RequestHeader(value = "X-User-Name", required = false) String username)
     {
         return userService.findUserPositionByWinLossRatio(username);
     }
@@ -109,7 +109,7 @@ public class UserController {
             description = "Возвращает информацию о аутентифицированном пользователе.")
     @GetMapping("/info")
     public Mono<UserResponseDTO> getUserInfo(
-            @RequestHeader(value = "X-User-ID", required = false) String username)
+            @RequestHeader(value = "X-User-Name", required = false) String username)
     {
         return userService.findByUsername(username);
     }

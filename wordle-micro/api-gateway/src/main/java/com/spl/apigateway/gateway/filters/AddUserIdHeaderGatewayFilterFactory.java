@@ -13,7 +13,7 @@ public class AddUserIdHeaderGatewayFilterFactory implements GlobalFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-            String header = exchange.getResponse().getHeaders().getFirst("X-User-Id");
+            String header = exchange.getResponse().getHeaders().getFirst("X-User-Name");
             log.info("X-User-Name: {}", header);
             if (header != null) {
                 exchange.getRequest().mutate()

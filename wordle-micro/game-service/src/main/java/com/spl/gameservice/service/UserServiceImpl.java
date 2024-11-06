@@ -36,8 +36,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<UserResponseDTO> findUserPositionByWins(String username) {
+        log.info("{}",username);
         return findByUsername(username).flatMap(userResponseDTO ->
                 userRepository.findUserRankByWins(username).flatMap(integer -> {
+                    log.info("{} {}",username, integer);
                     userResponseDTO.setPosition(integer);
                     return Mono.just(userResponseDTO);
                 }));
