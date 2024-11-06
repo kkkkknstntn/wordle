@@ -23,8 +23,8 @@ services:
     ports:
       - '5430:5432'
     volumes:
-#      - /Users/konstantinkirilenko/Desktop/slp/wordle/wordle-micro:/docker-entrypoint-initdb.d
-      - ./auth-service:/docker-entrypoint-initdb.d
+      #      - /Users/konstantinkirilenko/Desktop/slp/wordle/wordle-micro:/docker-entrypoint-initdb.d
+      - ./wordle-micro/auth-service:/docker-entrypoint-initdb.d
       - pg_auth:/var/lib/postgresql/data
     networks:
       - wordle-network
@@ -40,8 +40,8 @@ services:
     ports:
       - '5432:5432'
     volumes:
-#      - /Users/konstantinkirilenko/Desktop/slp/wordle/wordle-micro:/docker-entrypoint-initdb.d
-      - ./game-service:/docker-entrypoint-initdb.d
+      #      - /Users/konstantinkirilenko/Desktop/slp/wordle/wordle-micro:/docker-entrypoint-initdb.d
+      - ./wordle-micro/game-service:/docker-entrypoint-initdb.d
       - pg_wordle:/var/lib/postgresql/data
     networks:
       - wordle-network
@@ -60,8 +60,8 @@ services:
       SERVER_PORT: "8761"
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8761/eureka/"
       JWT_SECRET: 'b5f59337a612a2a7dc07328f3e7d1a04722967c7f06df20a499a7d3f91ff2a7e'
-      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_VK_CLIENTID: '52428023'
-      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_VK_CLIENTSECRET: '7Ol7NuJg5up6R5ggteKM'
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_VK_CLIENTID:
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_VK_CLIENTSECRET:
       SPRING_R2DBC_URL: 'r2dbc:postgresql://wordle_db/wordle_db'
       SPRING_R2DBC_USERNAME: 'postgres'
       SPRING_R2DBC_PASSWORD: 'postgres'
@@ -107,8 +107,8 @@ services:
       SERVER_PORT: "80"
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8761/eureka/"
       JWT_SECRET: 'b5f59337a612a2a7dc07328f3e7d1a04722967c7f06df20a499a7d3f91ff2a7e'
-      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_VK_CLIENTID:
-      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_VK_CLIENTSECRET:
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_VK_CLIENTID: '52428023'
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_VK_CLIENTSECRET: '7Ol7NuJg5up6R5ggteKM'
       SPRING_R2DBC_URL: 'r2dbc:postgresql://auth_db/auth_db'
       SPRING_R2DBC_USERNAME: 'postgres'
       SPRING_R2DBC_PASSWORD: 'postgres'
@@ -182,7 +182,7 @@ services:
       CONNECT_LOG4J_ROOT_LOGLEVEL: DEBUG
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
     volumes:
-      - ./jars:/usr/share/confluent-hub-components
+      - ./wordle-micro/jars:/usr/share/confluent-hub-components
     networks:
       - wordle-network
 
