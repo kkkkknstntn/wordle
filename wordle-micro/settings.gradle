@@ -1,0 +1,7 @@
+rootProject.name = 'wordle-micro'
+
+includeBuild 'eureka-server'
+
+includeBuild 'auth-service'
+
+includeBuild 'api-gateway'

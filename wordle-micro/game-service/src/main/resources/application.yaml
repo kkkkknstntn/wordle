@@ -1,0 +1,26 @@
+server:
+    port: 8082
+spring:
+    application:
+        name: game-service
+    r2dbc:
+        url: r2dbc:postgresql://localhost:5432/wordle_db
+        username: postgres
+        password: postgres
+    kafka:
+        bootstrap-servers: ${CONNECT_BOOTSTRAP_SERVERS}
+
+
+openapi:
+    service:
+        title: game-service doc
+        version: 1.0.0
+        url: http://localhost:80
+
+eureka:
+    client:
+        registerWithEureka: true
+        fetchRegistry: true
+        serviceUrl:
+            defaultZone: http://eureka-server:8761/eureka/
+
