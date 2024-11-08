@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 
 const GameStatusModel = () => {
   const dispatch = useAppDispatch()
-  const { game_id, game_status } = useSelector(selectCurrentGameState)
+  const { game_id, game_status, isGameWithoutAuth } = useSelector(selectCurrentGameState)
 
   const [word, setWord] = useState("");
   const navigate = useNavigate();
@@ -25,12 +25,6 @@ const GameStatusModel = () => {
     getGame();
   }, []); // Добавляем game_id в зависимости
 
-  const handlePlayWithAuth = async () => {
-    dispatch(resetState())
-    await dispatch(createGameWithAuth())
-    navigate("/game")
-  }
-
   return (
     <div className='resultPanel'>
         <div className='shadowForm'></div>
@@ -41,8 +35,10 @@ const GameStatusModel = () => {
                     Загаданное слово - {word}
                 </div>
                 <div className='resultTableButtons'>
-                    <DefaultButton text={'Сыграть ещё раз'} action={() => {handlePlayWithAuth()}}/>
-                    <DefaultButton text={'На главную'} action={() => { navigate("/user") }}/>
+                    <DefaultButton text={'На главную'} action={() => { 
+                        if(isGameWithoutAuth) navigate("/")
+                        else navigate("/user") 
+                      }}/>
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import instance from "../api/axios.api";
-import { IUser, LoginResponse, UserLogin, UserRegisterData } from "../types/user";
+import { IUser, LoginResponse, UpdateUserData, UserLogin, UserRegisterData } from "../types/user";
 import Cookies from 'js-cookie';
 import axios from "axios";
 
@@ -37,6 +37,27 @@ export const loginUser = createAsyncThunk<LoginResponse, UserLogin>( //мб на
             //console.log("Вы вошли")
             console.log(login)
             return login;
+        } catch (err) {
+            console.log(err);
+            return thunkAPI.rejectWithValue(err)
+        }
+    }
+)
+
+export const updateUser = createAsyncThunk<IUser, UpdateUserData>( //мб надо будет поменять any
+    "users/updateUser",
+    async (payload, thunkAPI) => {
+        try {
+            const instance = axios.create({
+                baseURL: 'http://127.0.0.1:80',
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                    "Content-Type": "application/json"
+                },
+            });
+            const user = await instance.patch(`/api/users/${payload.id}`, payload.userData).then(resp => resp.data)
+            console.log(user)
+            return user;
         } catch (err) {
             console.log(err);
             return thunkAPI.rejectWithValue(err)
@@ -113,7 +134,12 @@ const userSlice = createSlice({
         });
         builder.addCase(getCurrentUser.fulfilled, (state, { payload }) => {
             state.currentUser = payload
+            console.log(payload)
         });
+        builder.addCase(updateUser.fulfilled, (state, {payload}) => {
+            state.currentUser = payload
+        })
+        
     }
 })
 export const selectCurrentUserState = (state: { user: UserState }) => state.user;

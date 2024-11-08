@@ -6,6 +6,8 @@ export interface GameState { // Данные игры с сервера
     current_try: number;
     game_status: string;
     letter_statuses: string[];
+    isCorrectWord: boolean,
+    isGameWithoutAuth: boolean
 }
 
 export interface NewAttempt {

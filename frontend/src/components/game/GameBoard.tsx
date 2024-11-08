@@ -3,7 +3,7 @@ import { Player } from '../../types/player';
 import DefaultButton from '../defaultButton/DefaultButton';
 import PanelRow from './PanelRow';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { selectCurrentGameState, tryAgain } from '../../features/gameSlice';
+import { selectCurrentGameState, tryAgain, tryAgainWithoutAuth } from '../../features/gameSlice';
 import { NewAttempt } from '../../types/game';
 import { useSelector } from 'react-redux';
 import GameKeyboard from './Keyboard';
@@ -16,7 +16,7 @@ function GameBoard() {
   const [isEblan, setIsEblan] = useState(false)
   const dispatch = useAppDispatch()
 
-  const { game_id, guessed_word, current_try, game_status, letter_statuses } = useSelector(selectCurrentGameState)
+  const { game_id, guessed_word, current_try, game_status, letter_statuses, isCorrectWord, isGameWithoutAuth } = useSelector(selectCurrentGameState)
   const [copyLetter_statuses, setCopyLetter_statuses] = useState(letter_statuses)
   const isFirstRender = useRef(true);
 
@@ -60,10 +60,17 @@ function GameBoard() {
       console.log(game_id)
       console.log(current_try + " " + game_status + " " + letter_statuses)
       console.log(word)
-      await dispatch(tryAgain({
-        game_id: game_id,
-        guessed_word: word
-      }))
+      if(isGameWithoutAuth)
+        await dispatch(tryAgainWithoutAuth({
+          game_id: game_id,
+          guessed_word: word
+        }))
+      else {
+        await dispatch(tryAgain({
+          game_id: game_id,
+          guessed_word: word
+        }))
+      }
       setIsEblan(false)
       setWord('')
     }
@@ -73,15 +80,15 @@ function GameBoard() {
       {game_status == "WIN" || game_status == "LOSE" ? <GameStatusModel/> : <></>}
 
       <div className='viewBoard'>
-        {currentAttempt}
         {Array.from({ length: 6 }, (_, index) => (
-          <PanelRow 
+           <PanelRow 
             key={index} 
             word={word} 
             isLocked={index !== currentAttempt} 
             letter_statuses={index + 1 === currentAttempt ? [...copyLetter_statuses] : undefined}
-          />
-        ))}
+            />
+          ))
+        }
       </div>
       <DefaultButton 
         text={'Ввести'} 
@@ -89,7 +96,7 @@ function GameBoard() {
         extraClass='gameButton submitButton'
         isDisabled={currentAttempt >= 6}
       />
-
+      {isCorrectWord ? <></> : <>слово некорректно еблан <br/></>}
       {isEblan ? <> введи 5 букв еблан</> : <></>}
       <GameKeyboard 
         onLetterClick={handleLetterClick} 

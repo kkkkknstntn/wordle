@@ -1,3 +1,4 @@
+import axios from "axios";
 import instance from "../api/axios.api";
 import { GameDataById } from "../types/game";
 import { responseData } from "../types/gameData";

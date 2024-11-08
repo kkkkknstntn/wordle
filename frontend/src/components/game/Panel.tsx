@@ -3,7 +3,7 @@ import React from 'react';
 interface PanelProps {
   letter: string;
   filled: boolean;
-  state: string;
+  state?: string;
 }
 
 const Panel: React.FC<PanelProps> = ({ letter, filled, state }) => {

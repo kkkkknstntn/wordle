@@ -16,10 +16,15 @@ export interface IUser {
 }
 
 export type UserRegisterData = {
-    username: string;
-    password: string;
-    first_name: string;
-    last_name: string
+    username?: string;
+    password?: string;
+    first_name?: string;
+    last_name?: string
+}
+
+export interface UpdateUserData {
+    userData: UserRegisterData,
+    id?: number
 }
 
 export type UserLogin = {
