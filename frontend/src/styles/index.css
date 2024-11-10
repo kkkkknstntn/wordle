@@ -169,7 +169,7 @@ code {
   gap: 50px;
 
   background-color: #fbfbfb;
-  width: 550px;
+  width: 650px;
   margin: 0 auto;
   padding: 10px 20px 40px 20px;
   border-radius: 7px;
@@ -278,4 +278,52 @@ code {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.gameKeyboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.keyboardRow {
+  display: flex;
+  justify-content: center;
+}
+
+.gameButton {
+  width: 60px; /* Ширина кнопки */
+  height: 50px; /* Высота кнопки */
+  padding: 0; /* Убираем внутренние отступы */
+  margin: 3px;
+  font-size: 18px;
+  font-weight: bold; 
+  text-align: center; 
+  border-radius: 5px; 
+  /*border: none;  Убираем рамку */
+  cursor: pointer; /* Курсор при наведении */
+}
+
+.backspaceButton,
+.enterButton {
+  width: 95px; /* Ширина кнопки Backspace и Enter */
+  font-size: 17px;
+  background-color: #ffeee0;
+  border: 2px solid #b55100;
+} 
+.gameButton:hover {
+  background-color: rgba(0, 0, 0, 0.2); /* Цвет фона при наведении (по желанию) */
+}
+
+
+.errorMessage {
+  position: fixed; /* Фиксированное положение */
+  top: 50%; /* Центрирование по вертикали */
+  left: 50%; /* Центрирование по горизонтали */
+  transform: translate(-50%, -50%); /* Центрирование */
+  background-color: rgba(255, 0, 0, 0.8); /* Полупрозрачный красный фон */
+  color: white; /* Цвет текста */
+  padding: 20px; /* Отступы */
+  border-radius: 8px; /* Закругленные углы */
+  z-index: 1000; /* Поверх других элементов */
 }
