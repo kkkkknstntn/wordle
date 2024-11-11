@@ -119,21 +119,28 @@ const gameSlice = createSlice({
             state.game_status = payload.game_status
             state.letter_statuses = payload.letter_statuses
             state.guessed_word = payload.guessed_word
+            console.log("ЕБАТЬ ЕГО В РОТ " + state.isCorrectWord)
             state.isCorrectWord = true
         })
         builder.addCase(tryAgain.rejected, (state, { payload }) => {
             state.isCorrectWord = false
         })
-
+        builder.addCase(tryAgain.pending, (state, { payload }) => {
+            state.isCorrectWord = true
+        })
         builder.addCase(tryAgainWithoutAuth.fulfilled, (state, { payload }) => {
             state.current_try = payload.current_try
             state.game_status = payload.game_status
             state.letter_statuses = payload.letter_statuses
             state.guessed_word = payload.guessed_word
+            console.log("ЕБАТЬ ЕГО В РОТ " + state.isCorrectWord)
             state.isCorrectWord = true
         })
         builder.addCase(tryAgainWithoutAuth.rejected, (state, { payload }) => {
             state.isCorrectWord = false
+        })
+        builder.addCase(tryAgainWithoutAuth.pending, (state, { payload }) => {
+            state.isCorrectWord = true
         })
     }
 })

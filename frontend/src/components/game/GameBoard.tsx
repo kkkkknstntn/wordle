@@ -44,6 +44,13 @@ function GameBoard() {
     setCurrentAttempt(current_try);
   }, [current_try]);
 
+  useEffect(() => {
+    if(!isCorrectWord){
+      toast.error('Неверное слово');
+      console.log('СЛОВО НЕВЕРНО')
+    }
+  },[isCorrectWord])
+
   const handleLetterClick = (letter: string): void => {
     if (letter === 'Backspace') {
       if (word.length > 0) {
@@ -77,9 +84,7 @@ function GameBoard() {
         guessed_word: word
       }));
     }
-    if(!isCorrectWord){
-      toast.error('Неверное слово');
-    }
+   
     setIsEblan(false);
     setWord('');
   };
