@@ -5,6 +5,8 @@ import { selectCurrentGameState, tryAgain, tryAgainWithoutAuth } from '../../fea
 import { useSelector } from 'react-redux';
 import GameKeyboard from './Keyboard';
 import GameStatusModel from './GameStatusModel';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function GameBoard() {
   const [word, setWord] = useState('');
@@ -54,9 +56,11 @@ function GameBoard() {
 
   const handleSubmit = async () => {
     if (word.length !== 5) {
+      toast.error('Введите 5 букв'); // Вызываем ошибку
       setIsEblan(true);
       return;
     }
+    
 
     console.log(game_id);
     console.log(current_try + " " + letter_statuses);
@@ -73,7 +77,9 @@ function GameBoard() {
         guessed_word: word
       }));
     }
-
+    if(!isCorrectWord){
+      toast.error('Неверное слово');
+    }
     setIsEblan(false);
     setWord('');
   };
@@ -92,10 +98,7 @@ function GameBoard() {
           />
         ))}
       </div>
-
-      {isCorrectWord ? null : <div>Слово некорректно</div>}
-      {isEblan ? <div>Введите 5 букв</div> : null}
-
+        {/* {<GameErrorModel isCorrectWord={isCorrectWord} isEblan={isEblan} setIsEblan={setIsEblan}/>} */}
       <GameKeyboard 
         onLetterClick={handleLetterClick} 
         onBackspaceClick={() => handleLetterClick('Backspace')} 
@@ -103,6 +106,15 @@ function GameBoard() {
         letter_statuses={letter_statuses} 
         word={guessed_word}
         isFirstRender={isFirstRender.current}
+      />
+      <ToastContainer 
+        position="top-center"
+        hideProgressBar={true}
+        newestOnTop={true}
+        autoClose={1500}
+        closeOnClick
+        toastStyle={{color: "white", backgroundColor:"salmon", fontWeight:"bold", fontSize:"20px" }}
+        pauseOnFocusLoss={false}
       />
     </div>
   );
