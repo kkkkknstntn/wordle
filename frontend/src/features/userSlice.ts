@@ -6,7 +6,7 @@ import axios from "axios";
 
 interface UserState {
     currentUser: IUser | null; // Используем IUser как тип для currentUser
-    isLoading: boolean;
+    //isLoading: boolean;
     formType: string;
     isAuthenticated: boolean;
     accessToken: string | null;
@@ -20,6 +20,20 @@ export const createUser = createAsyncThunk<any, UserRegisterData>( //мб над
         try {
             const res = await instance.post('/api/users', payload);
             console.log("Юзер создался")
+            return res.data;
+        } catch (err) {
+            console.log(err);
+            return thunkAPI.rejectWithValue(err)
+        }
+    }
+)
+
+export const deleteUser = createAsyncThunk<any, number>( //мб надо будет поменять any
+    "users/deleteUser",
+    async (payload, thunkAPI) => {
+        try {
+            const res = await instance.delete(`/api/users/${payload}`);
+            console.log("Юзер удалился")
             return res.data;
         } catch (err) {
             console.log(err);
@@ -90,7 +104,7 @@ export const getCurrentUser = createAsyncThunk<IUser>(
 
 const initialState: UserState = {
     currentUser: null,
-    isLoading: false,
+    //isLoading: false,
     formType: "signin",
     isAuthenticated: false,
     accessToken: null,
@@ -114,7 +128,7 @@ const userSlice = createSlice({
             state.formType = "signin"
         });
         builder.addCase(loginUser.fulfilled, (state, {payload}) => {
-            state.isLoading = false;
+            //state.isLoading = false;
             state.showAuthorizationForm = false;
             state.isAuthenticated = true
             localStorage.setItem("accessToken", payload.access_token)
@@ -123,12 +137,10 @@ const userSlice = createSlice({
             state.refreshToken = payload.refresh_expires_at;
         });
         builder.addCase(loginUser.pending, (state, _) => {
-            state.isLoading = true;
             state.showAuthorizationForm = true;
             state.isAuthenticated = false
         });
         builder.addCase(loginUser.rejected, (state, _) => {
-            state.isLoading = false;
             state.showAuthorizationForm = true;
             state.isAuthenticated = false
         });
@@ -139,7 +151,6 @@ const userSlice = createSlice({
         builder.addCase(updateUser.fulfilled, (state, {payload}) => {
             state.currentUser = payload
         })
-        
     }
 })
 export const selectCurrentUserState = (state: { user: UserState }) => state.user;

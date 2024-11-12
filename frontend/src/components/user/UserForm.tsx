@@ -48,8 +48,8 @@ const UserForm = () => {
         <div className='userForm'>
             {isUserSettingsClicked ? 
             <>
-            <UserSettings/>
-            <DefaultButton text="Назад" extraClass="playButton" action={() => {setIsUserSettingsClicked(data => !data)}} />
+                <UserSettings/>
+                <DefaultButton text="Назад" extraClass="playButton" action={() => {setIsUserSettingsClicked(data => !data)}} />
             </>
             :
             <>

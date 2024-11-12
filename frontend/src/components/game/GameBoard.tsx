@@ -67,8 +67,6 @@ function GameBoard() {
       setIsEblan(true);
       return;
     }
-    
-
     console.log(game_id);
     console.log(current_try + " " + letter_statuses);
     console.log(word);
