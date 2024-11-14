@@ -9,7 +9,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=wordle_db
     ports:
-      - '5432:5432'
+      - '5460:5432'
     volumes:
       - pg_wordle:/var/lib/postgresql/data
     networks:
@@ -34,7 +34,17 @@ services:
       SPRING_FLYWAY_URL: 'jdbc:postgresql://wordle_db:5432/wordle_db'
     networks:
       - wordle-network
-
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - wordle_db
+      - wordle_app
+    networks:
+      - wordle-network
 networks:
   wordle-network:
     driver: bridge
