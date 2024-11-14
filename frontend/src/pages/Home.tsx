@@ -13,7 +13,6 @@ const HomePage = () => {
         <MainPanel/>
         <TopPlayers type="wins"/>
       </div>
-
     </div>
   );
 }
