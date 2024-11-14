@@ -6,7 +6,7 @@ import DefaultButton from '../defaultButton/DefaultButton'
 import UserSignInForm from './UserSignInForm'
 import UserSignUpForm from './UserSignUpForm'
 import { IUser } from '../../types/user'
-import { isGameWithoutAuth, createGameWithoutAuth } from '../../features/gameSlice'
+import { isGameWithoutAuth, createGameWithoutAuth, resetGameState } from '../../features/gameSlice'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { changeFormType, selectCurrentUserState } from '../../features/userSlice'
 
@@ -18,7 +18,7 @@ const AuthorizationForm = () => {
   const handlePlayWithoutAuth = async () => { 
       navigate("/game");
 
-      //await gameService.createGame().then(res => { console.log(res) }).catch(err => { console.warn(err) })
+      dispatch(resetGameState())
       dispatch(isGameWithoutAuth(true))
       await dispatch(createGameWithoutAuth())
   }

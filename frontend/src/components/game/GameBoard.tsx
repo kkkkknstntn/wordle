@@ -13,7 +13,6 @@ import { useNavigate } from 'react-router-dom';
 function GameBoard() {
   const [word, setWord] = useState('');
   const [currentAttempt, setCurrentAttempt] = useState(0);
-  const [isEblan, setIsEblan] = useState(false);
   const dispatch = useAppDispatch();
 
   const { game_id, guessed_word, current_try, game_status, letter_statuses, isCorrectWord, isGameWithoutAuth } = useSelector(selectCurrentGameState);
@@ -67,7 +66,6 @@ function GameBoard() {
   const handleSubmit = async () => {
     if (word.length !== 5) {
       toast.error('Введите 5 букв'); // Вызываем ошибку
-      setIsEblan(true);
       return;
     }
     console.log(game_id);
@@ -85,8 +83,6 @@ function GameBoard() {
         guessed_word: word
       }));
     }
-   
-    setIsEblan(false);
     setWord('');
   };
 

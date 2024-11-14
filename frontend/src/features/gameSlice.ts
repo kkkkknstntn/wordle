@@ -11,7 +11,6 @@ export const createGameWithoutAuth = createAsyncThunk<GameState>( //мб над�
     async (_, thunkAPI) => {
         try {
             const res = await axiosPublic.post('/api/games')
-            console.log('игра создалась')
             return res.data;
         } catch (err) {
             console.log(err);
@@ -25,7 +24,6 @@ export const tryAgain = createAsyncThunk<GameState, NewAttempt>( //мб надо
     async (payload, thunkAPI) => {
         try {
             const res = await axiosPrivate.patch('/api/games', payload)
-            console.log('успешно сделана новая попытка')
             return res.data;
         } catch (err) {
             console.log(err);
@@ -39,7 +37,6 @@ export const tryAgainWithoutAuth = createAsyncThunk<GameState, NewAttempt>( //м
     async (payload, thunkAPI) => {
         try {
             const res = await axiosPublic.patch('/api/games', payload)
-            console.log('успешно сделана новая попытка')
             return res.data;
         } catch (err) {
             console.log(err);
@@ -53,7 +50,6 @@ export const createGameWithAuth = createAsyncThunk<GameState>( //мб надо �
     async (_, thunkAPI) => {
         try {
             const res = await axiosPrivate.post('/api/games')
-            console.log('игра создалась')
             return res.data;
         } catch (err) {
             console.log(err);
@@ -67,7 +63,6 @@ export const deleteGameById = createAsyncThunk<any, number>( //мб надо б�
     async (payload, thunkAPI) => {
         try {
             const res = await axiosPublic.delete(`/api/games/${payload}`)
-            console.log('игра удалилась')
             return res.data;
         } catch (err) {
             console.log(err);
@@ -90,7 +85,7 @@ const gameSlice = createSlice({
     name: "game",
     initialState,
     reducers: {
-        resetState: (state) => {
+        resetGameState: (state) => {
             state = initialState
         },
         isGameWithoutAuth: (state, {payload}) => {
@@ -104,16 +99,12 @@ const gameSlice = createSlice({
             state.current_try = payload.current_try
             state.game_status = payload.game_status
             state.letter_statuses = payload.letter_statuses
-
-            console.log(state.game_id)
         })
         builder.addCase(createGameWithAuth.fulfilled, (state, { payload }) => {
             state.game_id = payload.game_id
             state.current_try = payload.current_try
             state.game_status = payload.game_status
             state.letter_statuses = payload.letter_statuses
-
-            console.log(state.game_id)
         })
 
         builder.addCase(tryAgain.fulfilled, (state, { payload }) => {
@@ -145,5 +136,5 @@ const gameSlice = createSlice({
     }
 })
 export const selectCurrentGameState = (state: { game: GameState }) => state.game;
-export const { resetState, isGameWithoutAuth } = gameSlice.actions;
+export const { resetGameState, isGameWithoutAuth } = gameSlice.actions;
 export default gameSlice.reducer;

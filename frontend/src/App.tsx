@@ -6,6 +6,7 @@ import UserPage from "./pages/User";
 import { toast, ToastContainer } from "react-toastify";
 import { useEffect } from "react";
 import { selectAppState } from "./features/appSlice";
+import PrivateRoute from "./features/privateRoute";
 
 function App() {
   const { loading, error, error_msg } = useSelector(selectAppState)
@@ -23,9 +24,9 @@ function App() {
     <>
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/game" element={<GamePage />} />
-        <Route path="/user" element={<UserPage />} />
+        <Route path="/" element={ <HomePage />} />
+        <Route path="/game" element={<PrivateRoute> <GamePage /> </PrivateRoute>} />
+        <Route path="/user" element={<PrivateRoute> <UserPage /> </PrivateRoute>} />
       </Routes>
     </Router>
     <ToastContainer 

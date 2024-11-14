@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCurrentUser, resetState, selectCurrentUserState } from '../../features/userSlice';
+import { getCurrentUser, selectCurrentUserState, resetUserState } from '../../features/userSlice';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import DefaultButton from '../defaultButton/DefaultButton';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-import { createGameWithAuth, isGameWithoutAuth } from '../../features/gameSlice';
+import { createGameWithAuth, isGameWithoutAuth, resetGameState } from '../../features/gameSlice';
 import UserSettings from './UserSettings';
 
 const UserForm = () => {
@@ -24,12 +24,12 @@ const UserForm = () => {
     const handleExit = () => {
         localStorage.removeItem('accessToken');
         Cookies.remove("refreshToken")
-        dispatch(resetState())
+        dispatch(resetUserState())
         navigate("/")
     };
 
     const handlePlayWithAuth = async () => {
-        dispatch(resetState())
+        dispatch(resetGameState())
         dispatch(isGameWithoutAuth(false))
         await dispatch(createGameWithAuth())
         navigate("/game")
