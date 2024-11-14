@@ -68,14 +68,20 @@ const GameKeyboard: React.FC<GameKeyboardProps> = ({ onLetterClick, onBackspaceC
                 let statusClassNumber = 0
                 let statusClass = ''
                 for (let i = words.length - 1; i >= 0; --i) {
-                  statusIndex = words[i].indexOf(letter)
-                  if (statusIndex !== undefined) {
-                    if (letterStatuses[i][statusIndex] === 'NOT_PRESENT')
-                      statusClassNumber = Math.max(statusClassNumber, 1)
-                    else if (letterStatuses[i][statusIndex] === 'MISPLACED')
-                      statusClassNumber = Math.max(statusClassNumber, 2)
-                    else if (letterStatuses[i][statusIndex] === 'CORRECT')
-                      statusClassNumber = Math.max(statusClassNumber, 3)
+                  for (let j = 0; j < words[i].length; ++j) {
+                    if (letter === words[i][j])
+                      statusIndex = j
+                    else
+                      statusIndex = undefined
+                  // остатки содержимого цикла
+                    if (statusIndex !== undefined) {
+                      if (letterStatuses[i][statusIndex] === 'NOT_PRESENT')
+                        statusClassNumber = Math.max(statusClassNumber, 1)
+                      else if (letterStatuses[i][statusIndex] === 'MISPLACED')
+                        statusClassNumber = Math.max(statusClassNumber, 2)
+                      else if (letterStatuses[i][statusIndex] === 'CORRECT')
+                        statusClassNumber = Math.max(statusClassNumber, 3)
+                    }
                   }
                 }
                 if (statusClassNumber === 1)
