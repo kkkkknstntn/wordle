@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios';
-import instance from '../../api/axios.api';
 import gameService from '../../service/gameService';
 import DefaultButton from '../defaultButton/DefaultButton';
 import { createUser } from '../../features/userSlice';

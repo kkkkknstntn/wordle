@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import instance from "../api/axios.api";
 import { IUser, LoginResponse, UpdateUserData, UserLogin, UserRegisterData } from "../types/user";
 import Cookies from 'js-cookie';
 import axios from "axios";

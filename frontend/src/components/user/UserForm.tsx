@@ -16,19 +16,9 @@ const UserForm = () => {
 
     useEffect(() => {
         const fetchCurrentUser = async () => {
-            try {
-                await dispatch(getCurrentUser()).unwrap()
-            } catch (error) {
-                // Удаляем accessToken из localStorage
-                localStorage.removeItem('accessToken');
-                // Удаляем refreshToken из Cookie
-                Cookies.remove("refreshToken")
-                //document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;'; // Устанавливаем истекшую дату
-            }
+            await dispatch(getCurrentUser()).unwrap()
         };
-        // if(isMounted.current)
             fetchCurrentUser();
-        // else isMounted.current = true
     }, []);
 
     const handleExit = () => {

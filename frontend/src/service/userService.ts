@@ -1,5 +1,4 @@
 import axios from "axios";
-import instance from "../api/axios.api";
 import { GameDataById } from "../types/game";
 import { responseData } from "../types/gameData";
 import { IUser } from "../types/user";
@@ -9,7 +8,7 @@ const getTopByWins = (page : number, size : number): Promise<IUser[]> => {
     const instance = axios.create({
         baseURL: 'http://127.0.0.1:80',
         headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
             "Content-Type": "application/json"
         },
     });
@@ -20,7 +19,7 @@ const getTopByWinLossRatio = (page : number, size : number): Promise<IUser[]> =>
     const instance = axios.create({
         baseURL: 'http://127.0.0.1:80',
         headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
             "Content-Type": "application/json"
         },
     });

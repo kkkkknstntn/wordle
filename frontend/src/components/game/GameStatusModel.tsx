@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import DefaultButton from '../defaultButton/DefaultButton'
-import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useSelector } from 'react-redux'
-import { createGameWithAuth, resetState, selectCurrentGameState } from '../../features/gameSlice'
+import { selectCurrentGameState } from '../../features/gameSlice'
 import gameService from '../../service/gameService'
 import { useNavigate } from 'react-router-dom'
 
 const GameStatusModel = () => {
-  const dispatch = useAppDispatch()
   const { game_id, game_status, isGameWithoutAuth } = useSelector(selectCurrentGameState)
 
   const [word, setWord] = useState("");

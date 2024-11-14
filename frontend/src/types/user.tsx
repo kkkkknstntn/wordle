@@ -36,7 +36,7 @@ export type LoginResponse = {
     user_id: number,
     issued_at: string,
     access_token: string,
-    access_expires_at: string,
+    access_expires_at: Date,
     refresh_token: string,
-    refresh_expires_at: string
+    refresh_expires_at: Date
 }

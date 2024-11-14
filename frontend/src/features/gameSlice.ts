@@ -1,15 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import instance from "../api/axios.api";
 import { IUser, LoginResponse, UserLogin, UserRegisterData } from "../types/user";
 import Cookies from 'js-cookie';
 import axios from "axios";
 import { GameDataById, GameState, GameStateAndGameDataById, NewAttempt } from "../types/game";
+import { axiosPrivate, axiosPublic } from "../api";
+import gameService from "../service/gameService";
 
 export const createGameWithoutAuth = createAsyncThunk<GameState>( //мб надо будет поменять any
     "games/createGameWithoutAuth",
     async (_, thunkAPI) => {
         try {
-            const res = await instance.post('/api/games')
+            const res = await axiosPublic.post('/api/games')
             console.log('игра создалась')
             return res.data;
         } catch (err) {
@@ -23,14 +24,7 @@ export const tryAgain = createAsyncThunk<GameState, NewAttempt>( //мб надо
     "games/tryNewAttempt",
     async (payload, thunkAPI) => {
         try {
-            const instance = axios.create({
-                baseURL: 'http://127.0.0.1:80',
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-                    "Content-Type": "application/json"
-                },
-            });
-            const res = await instance.patch('/api/games', payload)
+            const res = await axiosPrivate.patch('/api/games', payload)
             console.log('успешно сделана новая попытка')
             return res.data;
         } catch (err) {
@@ -44,7 +38,7 @@ export const tryAgainWithoutAuth = createAsyncThunk<GameState, NewAttempt>( //м
     "games/tryNewAttemptWithoutAuth",
     async (payload, thunkAPI) => {
         try {
-            const res = await instance.patch('/api/games', payload)
+            const res = await axiosPublic.patch('/api/games', payload)
             console.log('успешно сделана новая попытка')
             return res.data;
         } catch (err) {
@@ -57,16 +51,23 @@ export const tryAgainWithoutAuth = createAsyncThunk<GameState, NewAttempt>( //м
 export const createGameWithAuth = createAsyncThunk<GameState>( //мб надо будет поменять any
     "games/createGameWithAuth",
     async (_, thunkAPI) => {
-        const instance = axios.create({
-            baseURL: 'http://127.0.0.1:80',
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-                "Content-Type": "application/json"
-            },
-        });
         try {
-            const res = await instance.post('/api/games')
+            const res = await axiosPrivate.post('/api/games')
             console.log('игра создалась')
+            return res.data;
+        } catch (err) {
+            console.log(err);
+            return thunkAPI.rejectWithValue(err)
+        }
+    }
+)
+
+export const deleteGameById = createAsyncThunk<any, number>( //мб надо будет поменять any
+    "games/deleteGame",
+    async (payload, thunkAPI) => {
+        try {
+            const res = await axiosPublic.delete(`/api/games/${payload}`)
+            console.log('игра удалилась')
             return res.data;
         } catch (err) {
             console.log(err);
@@ -94,7 +95,8 @@ const gameSlice = createSlice({
         },
         isGameWithoutAuth: (state, {payload}) => {
             state.isGameWithoutAuth = payload
-        }
+        },
+
     },
     extraReducers: (builder) => {
         builder.addCase(createGameWithoutAuth.fulfilled, (state, { payload }) => {
@@ -119,7 +121,6 @@ const gameSlice = createSlice({
             state.game_status = payload.game_status
             state.letter_statuses = payload.letter_statuses
             state.guessed_word = payload.guessed_word
-            console.log("ЕБАТЬ ЕГО В РОТ " + state.isCorrectWord)
             state.isCorrectWord = true
         })
         builder.addCase(tryAgain.rejected, (state, { payload }) => {
@@ -133,7 +134,6 @@ const gameSlice = createSlice({
             state.game_status = payload.game_status
             state.letter_statuses = payload.letter_statuses
             state.guessed_word = payload.guessed_word
-            console.log("ЕБАТЬ ЕГО В РОТ " + state.isCorrectWord)
             state.isCorrectWord = true
         })
         builder.addCase(tryAgainWithoutAuth.rejected, (state, { payload }) => {

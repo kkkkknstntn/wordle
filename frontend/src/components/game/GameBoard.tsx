@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PanelRow from './PanelRow';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { selectCurrentGameState, tryAgain, tryAgainWithoutAuth } from '../../features/gameSlice';
+import { deleteGameById, selectCurrentGameState, tryAgain, tryAgainWithoutAuth } from '../../features/gameSlice';
 import { useSelector } from 'react-redux';
 import GameKeyboard from './Keyboard';
 import GameStatusModel from './GameStatusModel';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import DefaultButton from '../defaultButton/DefaultButton';
+import { useNavigate } from 'react-router-dom';
 
 function GameBoard() {
   const [word, setWord] = useState('');
@@ -17,6 +19,7 @@ function GameBoard() {
   const { game_id, guessed_word, current_try, game_status, letter_statuses, isCorrectWord, isGameWithoutAuth } = useSelector(selectCurrentGameState);
   const [copyLetter_statuses, setCopyLetter_statuses] = useState(letter_statuses);
   const isFirstRender = useRef(true);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -87,6 +90,12 @@ function GameBoard() {
     setWord('');
   };
 
+  const handleBack = async () => {
+      await dispatch(deleteGameById(game_id))
+      navigate("/user")
+      
+  } 
+
   return (
     <div className='gameWrapper'>
       {game_status === "WIN" || game_status === "LOSE" ? <GameStatusModel /> : null}
@@ -101,7 +110,6 @@ function GameBoard() {
           />
         ))}
       </div>
-        {/* {<GameErrorModel isCorrectWord={isCorrectWord} isEblan={isEblan} setIsEblan={setIsEblan}/>} */}
       <GameKeyboard 
         onLetterClick={handleLetterClick} 
         onBackspaceClick={() => handleLetterClick('Backspace')} 
@@ -119,6 +127,8 @@ function GameBoard() {
         toastStyle={{color: "white", backgroundColor:"salmon", fontWeight:"bold", fontSize:"20px" }}
         pauseOnFocusLoss={false}
       />
+      
+      <DefaultButton text="На главную" extraClass="playButton" action={handleBack} />
     </div>
   );
 }
