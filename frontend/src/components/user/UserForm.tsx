@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrentUser, resetState, selectCurrentUserState } from '../../features/userSlice';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
@@ -11,52 +11,53 @@ import UserSettings from './UserSettings';
 const UserForm = () => {
     const { currentUser } = useSelector(selectCurrentUserState);
     const dispatch = useAppDispatch();
-    const navigate = useNavigate()
-    const [isUserSettingsClicked, setIsUserSettingsClicked] = useState(false)
+    const navigate = useNavigate();
+    const [isUserSettingsClicked, setIsUserSettingsClicked] = useState(false);
 
     useEffect(() => {
         const fetchCurrentUser = async () => {
-            await dispatch(getCurrentUser()).unwrap()
+            await dispatch(getCurrentUser()).unwrap();
         };
-            fetchCurrentUser();
-    }, []);
+        fetchCurrentUser();
+    }, [dispatch]);
 
     const handleExit = () => {
         localStorage.removeItem('accessToken');
-        Cookies.remove("refreshToken")
-        dispatch(resetState())
-        navigate("/")
+        Cookies.remove("refreshToken");
+        dispatch(resetState());
+        navigate("/");
     };
 
     const handlePlayWithAuth = async () => {
-        dispatch(resetState())
-        dispatch(isGameWithoutAuth(false))
-        await dispatch(createGameWithAuth())
-        navigate("/game")
-    }
+        dispatch(resetState());
+        dispatch(isGameWithoutAuth(false));
+        await dispatch(createGameWithAuth());
+        navigate("/game");
+    };
+
     return (
         <div className='userForm'>
             {isUserSettingsClicked ? 
             <>
-                <UserSettings/>
-                <DefaultButton text="Назад" extraClass="playButton" action={() => {setIsUserSettingsClicked(data => !data)}} />
+                <UserSettings />
+                <DefaultButton text="Назад" extraClass="playButton" action={() => setIsUserSettingsClicked(prev => !prev)} />
             </>
             :
             <>
                 <div className='userState'>
-                    Привет, {currentUser?.username} <br />
-                    <br />
-                    Статистика: <br />
-                    Количество побед: {currentUser?.wins} <br />
-                    Количество поражений: {currentUser?.loses} <br />
-                    Ваше место в топе: {currentUser?.position} <br />
+                    <h3 className='greeting'>Привет, {currentUser?.username}</h3>
+                    <div className='statistics'>
+                        <p>Статистика:</p>
+                        <p>Количество побед: <strong>{currentUser?.wins}</strong></p>
+                        <p>Количество поражений: <strong>{currentUser?.loses}</strong></p>
+                        <p>Ваше место в топе: <strong>{currentUser?.position}</strong></p>
+                    </div>
                 </div>
-                <DefaultButton text="Играть" extraClass="playButton" action={handlePlayWithAuth}/>
+                <DefaultButton text="Играть" extraClass="playButton" action={handlePlayWithAuth} />
                 <DefaultButton text="Выйти" extraClass="playButton" action={handleExit} />
-                <DefaultButton text="Настройки" extraClass="playButton" action={() => {setIsUserSettingsClicked(data => !data)}} />
+                <DefaultButton text="Настройки" extraClass="playButton" action={() => setIsUserSettingsClicked(prev => !prev)} />
             </>
             }
-            
         </div>
     );
 };

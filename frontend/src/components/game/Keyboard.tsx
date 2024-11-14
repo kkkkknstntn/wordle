@@ -73,7 +73,6 @@ const GameKeyboard: React.FC<GameKeyboardProps> = ({ onLetterClick, onBackspaceC
                       statusIndex = j
                     else
                       statusIndex = undefined
-                  // остатки содержимого цикла
                     if (statusIndex !== undefined) {
                       if (letterStatuses[i][statusIndex] === 'NOT_PRESENT')
                         statusClassNumber = Math.max(statusClassNumber, 1)
