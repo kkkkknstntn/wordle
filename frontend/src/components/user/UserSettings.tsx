@@ -11,7 +11,7 @@ const UserSettings = () => {
   const { currentUser } = useSelector(selectCurrentUserState)
   const [userData, setUserData] = useState({
     username: currentUser?.username,
-    password: currentUser?.password,
+    password: "",
     firstName: currentUser?.first_name,
     lastName: currentUser?.last_name
   });
@@ -42,7 +42,7 @@ const UserSettings = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(userData)
+    //console.log(userData)
     await dispatch(updateUser(somedata));
   };
   return (

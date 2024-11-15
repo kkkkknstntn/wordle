@@ -157,6 +157,7 @@ const userSlice = createSlice({
         });
         builder.addCase(updateUser.fulfilled, (state, {payload}) => {
             state.currentUser = payload
+            console.log(state.currentUser)
         })
         builder.addCase(refresh_token.fulfilled, (state, { payload }) => {
             localStorage.setItem("access_token", payload.access_token);

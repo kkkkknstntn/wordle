@@ -15,7 +15,6 @@ const GameKeyboard: React.FC<GameKeyboardProps> = ({ onLetterClick, onBackspaceC
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
     ['Enter', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'Backspace']
   ];
-  console.log("рендер равно " + isFirstRender)
 
   const [words, setWords] = useState<string[]>([])
   const [letterStatuses, setLetterStatuses] = useState<string[][]>([])
