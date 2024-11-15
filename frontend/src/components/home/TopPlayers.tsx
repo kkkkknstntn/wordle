@@ -19,7 +19,7 @@ const TopPlayersByWinrate = ( topType : TopType ) => {
   return (
     <div className="topPlayersContainer">
       <div className="topPlayersText">
-        ТОП 20 ЕБЛАНОВ ПО {topType.type === "winrate" ? 'ВИНРЕЙТУ' : 'ЧИСЛУ ПОБЕД'} 
+        ТОП 20 ПО {topType.type === "winrate" ? 'ВИНРЕЙТУ' : 'ЧИСЛУ ПОБЕД'} 
       </div>
       <ul className="topPlayers">
         {topType.type === "winrate" ?

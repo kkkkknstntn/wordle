@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PanelRow from './PanelRow';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { deleteGameById, selectCurrentGameState, tryAgain, tryAgainWithoutAuth } from '../../features/gameSlice';
+import { deleteGameById, selectCurrentGameState, setIsGameWithoutAuth, tryAgain, tryAgainWithoutAuth } from '../../features/gameSlice';
 import { useSelector } from 'react-redux';
 import GameKeyboard from './Keyboard';
 import GameStatusModel from './GameStatusModel';
@@ -49,7 +49,6 @@ function GameBoard() {
   useEffect(() => {
     if(!isCorrectWord){
       toast.error('Неверное слово');
-      console.log('СЛОВО НЕВЕРНО')
     }
   },[isCorrectWord])
 
@@ -68,9 +67,6 @@ function GameBoard() {
       toast.error('Введите 5 букв'); // Вызываем ошибку
       return;
     }
-    console.log(game_id);
-    console.log(current_try + " " + letter_statuses);
-    console.log(word);
 
     if (isGameWithoutAuth) {
       await dispatch(tryAgainWithoutAuth({
@@ -87,10 +83,15 @@ function GameBoard() {
   };
 
   const handleBack = async () => {
-      await dispatch(deleteGameById(game_id))
-      navigate("/user")
-      
+    if(isGameWithoutAuth) dispatch(setIsGameWithoutAuth(false))
+      await dispatch(deleteGameById(game_id)).then(() => navigate("/user"))
   } 
+  // const firstUpdate = useRef(true);
+  // useEffect(()=>{
+  //   if(!firstUpdate.current)
+  //     navigate("/user")
+  //   else firstUpdate.current = false
+  // },[flag])
 
   return (
     <div className='gameWrapper'>

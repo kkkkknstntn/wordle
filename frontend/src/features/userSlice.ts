@@ -97,10 +97,10 @@ export const refresh_token = createAsyncThunk<LoginResponse>(
 const initialState: UserState = {
     currentUser: null,
     formType: "signin",
-    isAuthenticated: (localStorage.getItem('access_token') != undefined && (Number(localStorage.getItem("access_expires_at")) < new Date().getTime())),
+    isAuthenticated: ((localStorage.getItem('access_token') != null) && (Number(localStorage.getItem("access_expires_at")) > new Date().getTime())),
     access_token: null,
     refresh_token: null,
-    showAuthorizationForm: (localStorage.getItem('access_token') == undefined),
+    showAuthorizationForm: (localStorage.getItem('access_token') == null ||  (Number(localStorage.getItem("access_expires_at")) < new Date().getTime())),
     access_expires_at: 0,
     refresh_expires_at: 0
 };
@@ -109,7 +109,18 @@ const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        resetUserState: (state) => state = initialState,
+        resetUserState: (state) => {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('access_expires_at')
+            Cookies.remove("refresh_token")
+            state.currentUser = null
+            state.isAuthenticated = false
+            state.access_token = null
+            state.refresh_token = null
+            state.showAuthorizationForm = true
+            state.access_expires_at = 0
+            state.refresh_expires_at = 0
+        },
         changeFormType: (state) => {
             state.formType = state.formType === "signin" ? "signup" : "signin";
         }

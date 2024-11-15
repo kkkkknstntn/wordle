@@ -25,7 +25,6 @@ const UserSignInForm = () => {
 
     const isMounted = useRef(false);
     useEffect(() => { 
-        console.log(isAuthenticated)
         if(isMounted.current)
             navigate("/user")
         else isMounted.current = true
@@ -33,7 +32,6 @@ const UserSignInForm = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(userData)
         await dispatch(loginUser(userData)) as { 
             payload: LoginResponse
         };

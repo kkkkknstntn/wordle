@@ -3,8 +3,6 @@ import { Player } from '../types/player';
 import GameBoard from '../components/game/GameBoard';
 
 const GamePage = () => {
-  const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
-
   return (
     <div className="app">
       <div className="bgImage"/>

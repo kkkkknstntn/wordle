@@ -88,7 +88,7 @@ const gameSlice = createSlice({
         resetGameState: (state) => {
             state = initialState
         },
-        isGameWithoutAuth: (state, {payload}) => {
+        setIsGameWithoutAuth: (state, {payload}) => {
             state.isGameWithoutAuth = payload
         },
 
@@ -99,12 +99,14 @@ const gameSlice = createSlice({
             state.current_try = payload.current_try
             state.game_status = payload.game_status
             state.letter_statuses = payload.letter_statuses
+            state.isGameWithoutAuth = true
         })
         builder.addCase(createGameWithAuth.fulfilled, (state, { payload }) => {
             state.game_id = payload.game_id
             state.current_try = payload.current_try
             state.game_status = payload.game_status
             state.letter_statuses = payload.letter_statuses
+            state.isGameWithoutAuth = false
         })
 
         builder.addCase(tryAgain.fulfilled, (state, { payload }) => {
@@ -136,5 +138,5 @@ const gameSlice = createSlice({
     }
 })
 export const selectCurrentGameState = (state: { game: GameState }) => state.game;
-export const { resetGameState, isGameWithoutAuth } = gameSlice.actions;
+export const { resetGameState, setIsGameWithoutAuth } = gameSlice.actions;
 export default gameSlice.reducer;

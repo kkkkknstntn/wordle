@@ -5,7 +5,7 @@ import { useAppDispatch } from '../../hooks/useAppDispatch';
 import DefaultButton from '../defaultButton/DefaultButton';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-import { createGameWithAuth, isGameWithoutAuth, resetGameState } from '../../features/gameSlice';
+import { createGameWithAuth, setIsGameWithoutAuth, resetGameState } from '../../features/gameSlice';
 import UserSettings from './UserSettings';
 
 const UserForm = () => {
@@ -22,15 +22,13 @@ const UserForm = () => {
     }, [dispatch]);
 
     const handleExit = () => {
-        localStorage.removeItem('accessToken');
-        Cookies.remove("refreshToken")
         dispatch(resetUserState())
         navigate("/")
     };
 
     const handlePlayWithAuth = async () => {
         dispatch(resetGameState())
-        dispatch(isGameWithoutAuth(false))
+        dispatch(setIsGameWithoutAuth(false))
         await dispatch(createGameWithAuth())
         navigate("/game")
     }

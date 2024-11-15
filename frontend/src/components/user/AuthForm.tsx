@@ -6,7 +6,7 @@ import DefaultButton from '../defaultButton/DefaultButton'
 import UserSignInForm from './UserSignInForm'
 import UserSignUpForm from './UserSignUpForm'
 import { IUser } from '../../types/user'
-import { isGameWithoutAuth, createGameWithoutAuth, resetGameState } from '../../features/gameSlice'
+import { setIsGameWithoutAuth, createGameWithoutAuth, resetGameState } from '../../features/gameSlice'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { changeFormType, selectCurrentUserState } from '../../features/userSlice'
 
@@ -19,7 +19,7 @@ const AuthorizationForm = () => {
       navigate("/game");
 
       dispatch(resetGameState())
-      dispatch(isGameWithoutAuth(true))
+      dispatch(setIsGameWithoutAuth(true))
       await dispatch(createGameWithoutAuth())
   }
 
