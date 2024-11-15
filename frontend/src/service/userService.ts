@@ -6,7 +6,7 @@ import { IUser } from "../types/user";
 
 const getTopByWins = (page : number, size : number): Promise<IUser[]> => {
     const instance = axios.create({
-        baseURL: 'http://127.0.0.1:80',
+        baseURL: 'http://v183683.hosted-by-vdsina.com:3000',
         headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
             "Content-Type": "application/json"
@@ -17,7 +17,7 @@ const getTopByWins = (page : number, size : number): Promise<IUser[]> => {
 
 const getTopByWinLossRatio = (page : number, size : number): Promise<IUser[]> => {
     const instance = axios.create({
-        baseURL: 'http://127.0.0.1:80',
+        baseURL: 'http://v183683.hosted-by-vdsina.com:3000',
         headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
             "Content-Type": "application/json"
